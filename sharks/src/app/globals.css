@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root
+{
+    --Cor_AzulPrincipal: #2563eb; /*Logo, CTAs principais, links importantes*/
+    --Cor_AzulEscuro: #1e40af; /*Headers, navegação, textos importantes*/
+    --Cor_AzulHover: #3b82f6; /*Estados hover, highlights*/
+    --Cor_VerdeSucesso: #10b981; /*Botões de ação, confirmações, disponibilidade*/
+    --Cor_CinzaEscuro: #0f172a; /*Títulos principais, textos importantes*/
+    --Cor_CinzaMedio: #475569; /*Textos secundários, descrições*/
+    --Cor_CinzaClaro:#f8fafc; /*Fundos de seções, cards*/
+    --Cor_VermelhoAlerta: #ef4444; /*Erros, alertas, indisponibilidade*/
+
+    --Fonte_Texto: 'Inter', sans-serif; /*Fonte principal do site*/
+    --Fonte_Titulos: 'Poppins', sans-serif; /*Fonte para títulos e cabeçalhos*/
+    --Fonte_Botao: 'Roboto', sans-serif; /*Fonte alternativa para destaques*/
+}
+
+html, body
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+
+
+h1
+{
+    font-family: var(--Fonte_Titulos);
+    font-weight: 700;
+    color: var(--Cor_CinzaEscuro);
+    font-size: 2.5em;
+}
+
+.Texto
+{
+    font-family: var(--Fonte_Texto);
+    font-weight: 400;
+    color: var(--Cor_CinzaEscuro);
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+.Background
+{
+    background-color: var(--Cor_CinzaClaro);
+}
+
+.Container
+{
+    display: flex;
+    max-width: 1000px;
+    margin: 10px auto;
+    padding: 20px;
+    box-shadow: var(--Cor_CinzaMedio) 0px 4px 12px;
+    border-radius: 15px;
+}
+
+.Header_Deslogado
+{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
