@@ -1,5 +1,7 @@
-import "./Header_Deslogado.css";
+import Link from "next/link";
 
+import "./Header_Deslogado.css";
+import Botao_Preto from "../../ui/Botao_Preto/Botao_Preto";
 export default function Header_Deslogado()
 {
     return (
@@ -21,7 +23,10 @@ export default function Header_Deslogado()
                         <a className="Link" href="/contato">Contato</a>
                     </li>
                     <li>
-                        <a href="/Login">Login</a>
+                        <Botao_Preto 
+                            link="./Login"
+                            texto="Login"
+                        />
                     </li>
                 </ul>            
             </nav>
