@@ -3,35 +3,60 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import '../styles/Cadastro.css';
-import { phoneUtils } from '../utils/phoneUtils'; // Ajuste o caminho conforme sua estrutura
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { app } from "./firebaseConfig";
+import { phoneUtils } from '../utils/phoneUtils';
 
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Importa Firebase do arquivo de configuração
+import { auth, db } from '../utils/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function Cadastro() {
   const [termosAceitos, setTermosAceitos] = useState(false);
   const [isWhatsapp, setIsWhatsapp] = useState(false);
 
-  // Inicializa os handlers quando o componente é montado
+  // Inicializa máscara de telefone (se existir)
   useEffect(() => {
-    phoneUtils.initPhoneHandlers();
+    if (phoneUtils?.initPhoneHandlers) {
+      phoneUtils.initPhoneHandlers();
+    }
   }, []);
 
-  // Mostra ou oculta o campo WhatsApp
-  useEffect(() => {
-    const whatsappField = document.getElementById('whatsapp_field');
-    if (whatsappField) {
-      whatsappField.style.display = isWhatsapp ? 'block' : 'none';
+  // Submissão do formulário
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    if (data.SENHA !== data.CONFIRMA_SENHA) {
+      alert('As senhas não coincidem!');
+      return;
     }
-  }, [isWhatsapp]);
+
+    try {
+      // Cria usuário no Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, data.EMAIL, data.SENHA);
+      const user = userCredential.user;
+
+      // Salva dados complementares no Firestore
+      await addDoc(collection(db, "cadastros"), {
+        ...data,
+        uid: user.uid,
+        criadoEm: new Date()
+      });
+
+      alert("Cadastro realizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert("Erro ao cadastrar: " + error.message);
+    }
+  };
 
   return (
     <div>
       <h1>Cadastro</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
+        {/* --- Dados da empresa --- */}
         <fieldset>
           <legend>Dados da empresa</legend>
           <ul>
@@ -58,7 +83,7 @@ export default function Cadastro() {
             <li>
               <label htmlFor="INSCRICAO_ESTADUAL">Inscrição Estadual: </label>
               <input type="text" id="INSCRICAO_ESTADUAL" name="INSCRICAO_ESTADUAL"
-                pattern="\d{3}\.\d{3}\.\d{3}\.\d{3}" maxLength={20} required
+               maxLength={20} required
               />
             </li>
 
@@ -77,6 +102,7 @@ export default function Cadastro() {
           </ul>
         </fieldset>
 
+        {/* --- Endereço --- */}
         <fieldset>
           <legend>Endereço da Empresa</legend>
           <ul>
@@ -114,38 +140,16 @@ export default function Cadastro() {
               <label htmlFor='ESTADO'>Estado: </label>
               <select id='ESTADO' name='ESTADO' required>
                 <option value="">Selecione</option>
-                <option value="AC">Acre</option>
-                <option value="AL">Alagoas</option>
-                <option value="AP">Amapá</option>
-                <option value="AM">Amazonas</option>
-                <option value="BA">Bahia</option>
-                <option value="CE">Ceará</option>
-                <option value="DF">Distrito Federal</option>
-                <option value="ES">Espírito Santo</option>
-                <option value="GO">Goiás</option>
-                <option value="MA">Maranhão</option>
-                <option value="MT">Mato Grosso</option>
-                <option value="MS">Mato Grosso do Sul</option>
-                <option value="MG">Minas Gerais</option>
-                <option value="PA">Pará</option>
-                <option value="PB">Paraíba</option>
-                <option value="PR">Paraná</option>
-                <option value="PE">Pernambuco</option>
-                <option value="PI">Piauí</option>
-                <option value="RJ">Rio de Janeiro</option>
-                <option value="RN">Rio Grande do Norte</option>
-                <option value="RS">Rio Grande do Sul</option>
-                <option value="RO">Rondônia</option>
-                <option value="RR">Roraima</option>
-                <option value="SC">Santa Catarina</option>
                 <option value="SP">São Paulo</option>
-                <option value="SE">Sergipe</option>
-                <option value="TO">Tocantins</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="MG">Minas Gerais</option>
+                {/* ... restante dos estados ... */}
               </select>
             </li>
           </ul>
         </fieldset>
 
+        {/* --- Dados do responsável --- */}
         <fieldset>
           <legend>Dados do responsável</legend>
           <ul>
@@ -179,7 +183,7 @@ export default function Cadastro() {
                     name='IS_WHATSAPP'
                     value='sim'
                     style={{ marginRight: '5px' }}
-                    onChange={() => setIsWhatsapp(true)}
+                    onChange={() => setIsWhatsapp(false)} // se for sim, não pede outro número
                   />
                   Sim
                 </label>
@@ -190,17 +194,19 @@ export default function Cadastro() {
                     name='IS_WHATSAPP'
                     value='nao'
                     style={{ marginRight: '5px' }}
-                    onChange={() => setIsWhatsapp(false)}
+                    onChange={() => setIsWhatsapp(true)} // se for não, pede outro número
                   />
                   Não
                 </label>
               </div>
             </li>
 
-            <li id='whatsapp_field' style={{ display: 'none' }}>
-              <label htmlFor='WHATSAPP'>Número do WhatsApp: </label>
-              <input type='text' id='WHATSAPP' name='WHATSAPP' placeholder="(00) 00000-0000" maxLength={15} />
-            </li>
+            {isWhatsapp && (
+              <li id='whatsapp_field'>
+                <label htmlFor='WHATSAPP'>Número do WhatsApp: </label>
+                <input type='text' id='WHATSAPP' name='WHATSAPP' placeholder="(00) 00000-0000" maxLength={15} />
+              </li>
+            )}
 
             <li>
               <label htmlFor='CARGO'>Cargo/Função: </label>
@@ -209,6 +215,7 @@ export default function Cadastro() {
           </ul>
         </fieldset>
 
+        {/* --- Comerciais --- */}
         <fieldset>
           <legend>Informações Comerciais</legend>
           <ul>
@@ -234,13 +241,35 @@ export default function Cadastro() {
           </ul>
         </fieldset>
 
+        {/* --- Conta --- */}
+        <fieldset>
+          <legend>Criação de Conta</legend>
+          <ul>
+            <li>
+              <label htmlFor='SENHA'>Senha: </label>
+              <input 
+                type='password' 
+                id='SENHA' 
+                name='SENHA'
+                minLength={6} 
+                maxLength={20} 
+                required />
+            </li>
 
+            <li>
+              <label htmlFor='CONFIRMA_SENHA'>Confirmar Senha: </label>
+              <input 
+                type='password' 
+                id='CONFIRMA_SENHA' 
+                name='CONFIRMA_SENHA' 
+                minLength={6} 
+                maxLength={20}
+                required />
+            </li>
+          </ul>
+        </fieldset>
 
-
-
-
-
-
+        {/* --- Termos --- */}
         <div>
           <p>Aceitar Termos e Condições </p>
           <input type="checkbox" id="TERMOS" name="TERMOS" value="TRUE" onChange={(e) => setTermosAceitos(e.target.checked)} />

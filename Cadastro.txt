@@ -1,0 +1,47 @@
+DADOS DA EMPRESA
+
+Razão Social * - RAZAO_SOCIAL
+Nome Fantasia - NOME_FANTASIA
+CNPJ * - CNPJ
+Inscrição Estadual * - INSCRICAO_ESTADUAL
+Tipo de Empresa *
+	LOJA_FISICA
+	E-COMMERCE
+	DISTRIBUIDOR
+	MARKETPLACE
+	ASSISTENCIA_TECNICA
+	OUTRO
+
+ENDEREÇO DA EMPRESA
+
+CEP * - CEP
+Endereço * - ENDERECO
+Número * - NUMERO
+Complemento - COMPLEMENTO
+Bairro * - BAIRRO
+Cidade * - CIDADE
+Estado * - ESTADO
+
+DADOS DO RESPONSÁVEL
+
+Nome Completo * - NOME_RESPONSAVEL
+CPF * - CPF
+Cargo/Função * - CARGO
+Telefone * - TELEFONE
+E-mail * - EMAIL
+Whatsapp - WHATSAPP
+
+INFORMAÇÕES COMERCIAIS
+
+Volume de Compra Mensal Estimado * - VOLUME_MENSAL
+Tempo de Atividade no Ramo * - TEMPO_ATIVIDADE
+Modelos de iPhone de Interesse - MODELOS_INTERESSE
+Observações Adicionais - OBSERVACOES
+
+TERMOS E CONDIÇÕES
+
+Aceitar Termos e Condições *
+Receber ofertas por e-mail
+
+
+Total: 22 campos (13 obrigatórios marcados com *)

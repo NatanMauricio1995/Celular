@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDzyXMcdFpZaIMXK-C-N3iQAIQIwGLUro0",
   authDomain: "sharks-technology.firebaseapp.com",
   projectId: "sharks-technology",
-  storageBucket: "sharks-technology.firebasestorage.app",
+  storageBucket: "sharks-technology.appspot.com", // corrigido
   messagingSenderId: "677974278421",
   appId: "1:677974278421:web:d1c20d92151ae1089fa91c",
   measurementId: "G-JQ70HGQ79G"
