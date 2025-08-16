@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import '../styles/Cadastro.css';
 import { phoneUtils } from '../utils/phoneUtils'; // Ajuste o caminho conforme sua estrutura
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "./firebaseConfig";
+
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 export default function Cadastro() {
   const [termosAceitos, setTermosAceitos] = useState(false);
@@ -227,6 +233,13 @@ export default function Cadastro() {
             </li>
           </ul>
         </fieldset>
+
+
+
+
+
+
+
 
         <div>
           <p>Aceitar Termos e Condições </p>
