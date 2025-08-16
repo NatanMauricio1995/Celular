@@ -1,7 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect } from 'react';
 import '../styles/Cadastro.css';
+import { phoneUtils } from '../utils/phoneUtils'; // Ajuste o caminho conforme sua estrutura
 
 export default function Cadastro() {
+  // Inicializa os handlers quando o componente é montado
+  useEffect(() => {
+    phoneUtils.initPhoneHandlers();
+  }, []);
+
   return (
     <div>
       <h1>Cadastro</h1>
@@ -16,7 +25,7 @@ export default function Cadastro() {
                 type='text'
                 id='RAZAO_SOCIAL' 
                 name='RAZAO_SOCIAL'
-                max={100}
+                maxLength={100}
                 required
               />  
             </li>
@@ -27,7 +36,7 @@ export default function Cadastro() {
                 type="text" 
                 id="NOME_FANTASIA" 
                 name="NOME_FANTASIA"
-                max={100} 
+                maxLength={100} 
               />
             </li>
 
@@ -64,7 +73,7 @@ export default function Cadastro() {
                 <option value="E-COMMERCE">E-commerce</option>
                 <option value="DISTRIBUIDOR">Distribuidor</option>
                 <option value="MARKETPLACE">Marketplace</option>
-                <option value="ASSISTENCIA_TECNICA">Assitência Técnica</option>
+                <option value="ASSISTENCIA_TECNICA">Assistência Técnica</option>
                 <option value="OUTRO">Outro</option>
               </select>
             </li>
@@ -72,7 +81,7 @@ export default function Cadastro() {
         </fieldset>
  
         <fieldset>
-          <legend>Enderço da Empresa</legend>
+          <legend>Endereço da Empresa</legend>
           <ul>
             <li>
               <label htmlFor='CEP'>CEP: </label>
@@ -93,7 +102,7 @@ export default function Cadastro() {
                 type='text'
                 id='ENDERECO' 
                 name='ENDERECO'
-                max={100}
+                maxLength={100}
                 required
               />
             </li>
@@ -115,7 +124,7 @@ export default function Cadastro() {
                 type='text'
                 id='COMPLEMENTO' 
                 name='COMPLEMENTO'
-                max={50}
+                maxLength={50}
               />
             </li>
 
@@ -125,7 +134,7 @@ export default function Cadastro() {
                 type='text'
                 id='BAIRRO' 
                 name='BAIRRO'
-                max={50}
+                maxLength={50}
                 required
               />
             </li>
@@ -136,7 +145,7 @@ export default function Cadastro() {
                 type='text'
                 id='CIDADE' 
                 name='CIDADE'
-                max={50}
+                maxLength={50}
                 required
               />
             </li>
@@ -175,6 +184,108 @@ export default function Cadastro() {
               </select>
             </li> 
           </ul> 
+        </fieldset>
+
+        <fieldset>
+          <legend>Dados do responsável</legend>
+
+          <ul>
+            <li>
+              <label htmlFor='NOME_RESPONSAVEL'>Nome Completo: </label>
+              <input
+                type='text'
+                id='NOME_RESPONSAVEL' 
+                name='NOME_RESPONSAVEL'
+                maxLength={100}
+                required
+              />
+            </li>
+
+            <li>
+              <label htmlFor='CPF'>CPF: </label>
+              <input
+                type='text'
+                id='CPF' 
+                name='CPF'
+                pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                title="Formato: 000.000.000-00"
+                required
+                maxLength={14}
+              />
+            </li>
+
+            <li>
+              <label htmlFor='EMAIL'>E-mail: </label>
+              <input
+                type='email'
+                id='EMAIL' 
+                name='EMAIL'
+                maxLength={100}
+                required
+              />
+            </li>
+
+            <li>
+              <label htmlFor='TELEFONE'>Telefone: </label>
+              <input
+                type='text'
+                id='TELEFONE' 
+                name='TELEFONE'
+                placeholder="(00) 00000-0000"
+                maxLength={15}
+                required
+              />
+            </li>
+
+            <li>
+              <label>Este número é WhatsApp?</label>
+              <div style={{marginTop: '5px'}}>
+                <label htmlFor='whatsapp_sim' style={{marginRight: '15px', fontWeight: 'normal'}}>
+                  <input
+                    type='radio'
+                    id='whatsapp_sim'
+                    name='IS_WHATSAPP'
+                    value='sim'
+                    style={{marginRight: '5px'}}
+                  />
+                  Sim
+                </label>
+                <label htmlFor='whatsapp_nao' style={{fontWeight: 'normal'}}>
+                  <input
+                    type='radio'
+                    id='whatsapp_nao'
+                    name='IS_WHATSAPP'
+                    value='nao'
+                    style={{marginRight: '5px'}}
+                  />
+                  Não
+                </label>
+              </div>
+            </li>
+
+            <li id='whatsapp_field' style={{display: 'none'}}>
+              <label htmlFor='WHATSAPP'>Número do WhatsApp: </label>
+              <input
+                type='text'
+                id='WHATSAPP' 
+                name='WHATSAPP'
+                placeholder="(00) 00000-0000"
+                maxLength={15}
+              />
+            </li>
+
+            <li>
+              <label htmlFor='CARGO'>Cargo/Função: </label>
+              <input
+                type='text'
+                id='CARGO' 
+                name='CARGO'
+                maxLength={50}
+                required
+              />
+            </li>
+
+          </ul>
         </fieldset>
       </form>
       
