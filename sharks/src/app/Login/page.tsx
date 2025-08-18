@@ -6,6 +6,7 @@ import Link from "next/link";
 import { auth } from "../utils/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import "../styles/Login.css";
+import Header_Login from "../components/layout/Header_Login/Header_Login";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,43 +32,46 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h1>Entre</h1>
-      <form onSubmit={handleLogin}>
-        <label htmlFor="email">Email:</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-        
-        <label htmlFor="password">Senha:</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-        
-        <button type="submit" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+    <>
+      <Header_Login className="Header_Login" />
+      <div className="login-container">
+        <h1>Entre</h1>
+        <form onSubmit={handleLogin}>
+          <label htmlFor="email">Email:</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
+          
+          <label htmlFor="password">Senha:</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
+          
+          <button type="submit" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
 
-      {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error}</p>}
 
-      <Link href="#">Esqueci minha senha</Link>
+        <Link href="#">Esqueci minha senha</Link>
 
-      <p>OU</p>
-      <p>
-        Novo na Sharks?{" "}
-        <Link href="/Cadastro">Cadastre-se aqui!</Link>
-      </p>
-    </div>
+        <p>OU</p>
+        <p>
+          Novo na Sharks?{" "}
+          <Link href="/Cadastro">Cadastre-se aqui!</Link>
+        </p>
+      </div>
+    </>
   );
 }
