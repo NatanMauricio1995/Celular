@@ -54,6 +54,9 @@ export default function Cadastro() {
 
   return (
     <div>
+      <header>
+        
+      </header>
       <h1>Cadastro</h1>
       <form onSubmit={handleSubmit}>
         {/* --- Dados da empresa --- */}
