@@ -1,0 +1,8 @@
+.Box
+{
+    background-color: var(--Cor_CinzaClaro);
+    border: var(--Cor_CinzaMedio) 1px solid;
+    border-radius: 25px;
+    box-shadow: -5px 0 0 0 var(--Cor_AzulPrincipal);
+    width: 100%;
+}

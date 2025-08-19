@@ -1,0 +1,40 @@
+.Header_Cadastro
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--Cor_AzulEscuro);
+}
+
+.LogoBranco
+{
+    width: auto;
+    height: 4em;
+    margin: 20px;
+}
+.Menu
+{
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 1.5em;
+    align-items: center;
+    gap: 1em;
+}
+
+.Link 
+{
+    color: var(--Cor_CinzaClaro);
+    text-decoration: none;
+    padding: 10px 15px;
+    font-family: var(--Fonte_Titulos);
+    font-weight: 500;
+    transition: background-color 0.3s cubic-bezier(0.075, 0.82, 0.165, 1), color 0.5s;
+    border-radius: 8px; 
+}
+
+.Link:hover
+{
+    color: white; 
+    background-color: rgba(0, 0, 0, 0.5); 
+}

@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import '../styles/Cadastro.css';
 import { phoneUtils } from '../utils/phoneUtils';
+import Header_Cadastro from "../components/layout/Header_Cadastro/Header_Cadastro";
+import Box from "../components/layout/Box/Box";
+
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
@@ -54,13 +57,16 @@ export default function Cadastro() {
 
   return (
     <div>
-      <header>
-        
-      </header>
-      <h1>Cadastro</h1>
+      <Header_Cadastro className="Header_Cadastro"/>
+      <div className='Corpo'>
+        <h1>Cadastro</h1>
       <form onSubmit={handleSubmit}>
         {/* --- Dados da empresa --- */}
+          <Box>
+            <p>Arroz</p>
+          </Box>
         <fieldset>
+
           <legend>Dados da empresa</legend>
           <ul>
             <li>
@@ -285,6 +291,9 @@ export default function Cadastro() {
       </form>
 
       <p>Já tem uma conta? <Link href="/Login">Faça login aqui!</Link></p>
+
+      </div>
+  
     </div>
   );
 }
