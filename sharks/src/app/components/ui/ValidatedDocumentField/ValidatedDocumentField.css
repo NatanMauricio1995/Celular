@@ -1,0 +1,18 @@
+/* components/ui/ValidatedDocumentField/ValidatedDocumentField.css */
+
+/* Apenas estilos essenciais que complementam o seu CSS existente */
+
+/* Animação do loading - única coisa que precisa de CSS externo */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Classe para aplicar a animação via JavaScript quando necessário */
+.spinning {
+  animation: spin 1s linear infinite;
+}

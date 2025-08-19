@@ -7,15 +7,31 @@ import { phoneUtils } from '../utils/phoneUtils';
 import Header_Cadastro from "../components/layout/Header_Cadastro/Header_Cadastro";
 import Box from "../components/layout/Box/Box";
 import Botao_Form_Grande from '../components/ui/Botao_Form_Grande/Botao_Form_Grande';
+import ValidatedDocumentField from '../components/ui/ValidatedDocumentField/ValidatedDocumentField';
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 
+// Hook de validação de documentos
+import useDocumentValidation from '../hooks/useDocumentValidation';
+
 export default function Cadastro() {
   const [termosAceitos, setTermosAceitos] = useState(false);
   const [isWhatsapp, setIsWhatsapp] = useState(false);
+  const [formData, setFormData] = useState({
+    CNPJ: '',
+    CPF: ''
+  });
+
+  // Hook de validação de documentos
+  const {
+    validationState,
+    handleCNPJChange,
+    handleCPFChange,
+    areDocumentsValid
+  } = useDocumentValidation();
 
   // Inicializa máscara de telefone (se existir)
   useEffect(() => {
@@ -24,12 +40,40 @@ export default function Cadastro() {
     }
   }, []);
 
+  // Atualiza campos do formulário
+  const updateField = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Manipuladores de mudança dos campos validados
+  const handleDocumentChange = async (field, value) => {
+    let maskedValue;
+    
+    if (field === 'CNPJ') {
+      maskedValue = await handleCNPJChange(value);
+    } else if (field === 'CPF') {
+      maskedValue = await handleCPFChange(value);
+    }
+    
+    updateField(field, maskedValue);
+    return maskedValue;
+  };
+
   // Submissão do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    // Verifica se os documentos são válidos
+    if (!areDocumentsValid()) {
+      alert('Por favor, verifique se CNPJ e CPF são válidos antes de prosseguir.');
+      return;
+    }
+
+    const formDataObj = new FormData(e.target);
+    const data = Object.fromEntries(formDataObj.entries());
 
     if (data.SENHA !== data.CONFIRMA_SENHA) {
       alert('As senhas não coincidem!');
@@ -41,12 +85,19 @@ export default function Cadastro() {
       const userCredential = await createUserWithEmailAndPassword(auth, data.EMAIL, data.SENHA);
       const user = userCredential.user;
 
-      // Salva dados complementares no Firestore
-      await addDoc(collection(db, "cadastros"), {
+      // Adiciona dados de validação dos documentos
+      const dataToSave = {
         ...data,
         uid: user.uid,
-        criadoEm: new Date()
-      });
+        criadoEm: new Date(),
+        documentValidation: {
+          cnpj: validationState.cnpj.data,
+          cpf: validationState.cpf.data
+        }
+      };
+
+      // Salva dados complementares no Firestore
+      await addDoc(collection(db, "cadastros"), dataToSave);
 
       alert("Cadastro realizado com sucesso!");
     } catch (error) {
@@ -89,18 +140,18 @@ export default function Cadastro() {
                 />
               </li>
 
-              <li>
-                <label htmlFor="CNPJ">CNPJ: <span className='Asterisco'>*</span></label>
-                <input
-                  className="Campo_Texto"
-                  type="text"
-                  id="CNPJ"
-                  name="CNPJ"
-                  title="Formato: 00.000.000/0000-00"
-                  maxLength={18}
-                  required
-                />
-              </li>
+              {/* Campo CNPJ com validação */}
+              <ValidatedDocumentField
+                id="CNPJ"
+                name="CNPJ"
+                label="CNPJ:"
+                value={formData.CNPJ}
+                onChange={(value) => handleDocumentChange('CNPJ', value)}
+                validationState={validationState.cnpj}
+                title="Formato: 00.000.000/0000-00"
+                maxLength={18}
+                required
+              />
 
               <li>
                 <label htmlFor="INSCRICAO_ESTADUAL">Inscrição Estadual: <span className='Asterisco'>*</span></label>
@@ -260,19 +311,18 @@ export default function Cadastro() {
                 />
               </li>
 
-              <li>
-                <label htmlFor='CPF'>CPF: <span className='Asterisco'>*</span></label>
-                <input
-                  className="Campo_Texto"
-                  type='text'
-                  id='CPF'
-                  name='CPF'
-                  pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
-                  title="Formato: 000.000.000-00"
-                  maxLength={14}
-                  required
-                />
-              </li>
+              {/* Campo CPF com validação */}
+              <ValidatedDocumentField
+                id="CPF"
+                name="CPF"
+                label="CPF:"
+                value={formData.CPF}
+                onChange={(value) => handleDocumentChange('CPF', value)}
+                validationState={validationState.cpf}
+                title="Formato: 000.000.000-00"
+                maxLength={14}
+                required
+              />
 
               <li>
                 <label htmlFor='EMAIL'>E-mail: <span className='Asterisco'>*</span></label>
@@ -402,7 +452,6 @@ export default function Cadastro() {
 
               <li>
                 <label htmlFor="OBSERVACOES">Observações adicionais: </label>
-                
                 <textarea
                   className='Campo_TextArea'
                   id="OBSERVACOES"
@@ -410,7 +459,6 @@ export default function Cadastro() {
                   maxLength={500}
                   rows={4}
                 ></textarea>
-                
               </li>
             </ul>
             <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
@@ -421,8 +469,9 @@ export default function Cadastro() {
             <h3 className="Titulo_Fieldset">Criação de Conta</h3>
             <ul className="Lista_Campos">
               <li>
-                <label htmlFor='SENHA'>Senha: </label>
+                <label htmlFor='SENHA'>Senha: <span className='Asterisco'>*</span></label>
                 <input
+                  className="Campo_Texto"
                   type='password'
                   id='SENHA'
                   name='SENHA'
@@ -433,8 +482,9 @@ export default function Cadastro() {
               </li>
 
               <li>
-                <label htmlFor='CONFIRMA_SENHA'>Confirmar Senha: </label>
+                <label htmlFor='CONFIRMA_SENHA'>Confirmar Senha: <span className='Asterisco'>*</span></label>
                 <input
+                  className="Campo_Texto"
                   type='password'
                   id='CONFIRMA_SENHA'
                   name='CONFIRMA_SENHA'
@@ -444,28 +494,51 @@ export default function Cadastro() {
                 />
               </li>
             </ul>
+            <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
           </Box>
 
           {/* --- Termos --- */}
           <Box>
-            <h3 className="Titulo_Fieldset">Aceitar Termos e Condições </h3>
-            <input
-              type="checkbox"
-              id="TERMOS"
-              name="TERMOS"
-              value="TRUE"
-              onChange={(e) => setTermosAceitos(e.target.checked)}
-            />
-            <label htmlFor="TERMOS">Li e aceito os termos e condições</label>
+            <h3 className="Titulo_Fieldset">Aceitar Termos e Condições</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                type="checkbox"
+                id="TERMOS"
+                name="TERMOS"
+                value="TRUE"
+                onChange={(e) => setTermosAceitos(e.target.checked)}
+                required
+              />
+              <label htmlFor="TERMOS">Li e aceito os termos e condições <span className='Asterisco'>*</span></label>
+            </div>
           </Box>
           
           <Botao_Form_Grande
-            color = "#10b981"
-            type = "submit"
-            disabled={!termosAceitos}
+            color="#10b981"
+            type="submit"
+            disabled={!termosAceitos || !areDocumentsValid()}
+            style={{
+              opacity: (!termosAceitos || !areDocumentsValid()) ? 0.6 : 1
+            }}
           >
             Enviar Cadastro
           </Botao_Form_Grande>
+
+          {/* Indicador de status dos documentos - estilo consistente */}
+          {(!areDocumentsValid() && (validationState.cnpj.isValid !== null || validationState.cpf.isValid !== null)) && (
+            <p className='Texto' style={{ 
+              marginTop: '1rem', 
+              padding: '10px', 
+              backgroundColor: '#fef2f2', 
+              border: '1px solid #fecaca', 
+              borderRadius: '4px',
+              color: '#dc2626',
+              fontSize: '14px',
+              textAlign: 'center'
+            }}>
+              ⚠️ Aguarde a validação completa dos documentos (CNPJ e CPF) para enviar o cadastro
+            </p>
+          )}
         </form>
 
         <p className='Texto'>Já tem uma conta? <Link href="/Login">Faça login aqui!</Link></p>
