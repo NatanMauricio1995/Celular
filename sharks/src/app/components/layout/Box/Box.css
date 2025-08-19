@@ -4,7 +4,7 @@
     border: var(--Cor_CinzaMedio) 1px solid;
     border-radius: 25px;
     box-shadow: -5px 5px 0 0 var(--Cor_AzulPrincipal);
-    width: 70%;
+    width: 85%;
     padding: 0 20px;
     margin-bottom: 20px;
 }

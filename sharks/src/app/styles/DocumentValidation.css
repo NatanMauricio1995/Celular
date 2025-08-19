@@ -1,0 +1,45 @@
+/* styles/DocumentValidation.css */
+
+/* Estados de validação dos campos */
+.campo-validating {
+  border-color: #f59e0b !important;
+  background-color: #fffbeb !important;
+  transition: all 0.3s ease !important;
+}
+
+.campo-valid {
+  border-color: #10b981 !important;
+  background-color: #f0fdf4 !important;
+  transition: all 0.3s ease !important;
+}
+
+.campo-invalid {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Botão desabilitado com transição suave */
+.botao-disabled {
+  opacity: 0.6 !important;
+  transition: opacity 0.3s ease !important;
+  cursor: not-allowed !important;
+}
+
+.botao-enabled {
+  opacity: 1 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Focus states para acessibilidade */
+.campo-validating:focus {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+}
+
+.campo-valid:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.campo-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}

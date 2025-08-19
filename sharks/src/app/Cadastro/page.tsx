@@ -7,31 +7,74 @@ import { phoneUtils } from '../utils/phoneUtils';
 import Header_Cadastro from "../components/layout/Header_Cadastro/Header_Cadastro";
 import Box from "../components/layout/Box/Box";
 import Botao_Form_Grande from '../components/ui/Botao_Form_Grande/Botao_Form_Grande';
-import ValidatedDocumentField from '../components/ui/ValidatedDocumentField/ValidatedDocumentField';
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 
-// Hook de validação de documentos
-import useDocumentValidation from '../hooks/useDocumentValidation';
+// Importa validadores
+import { useValidacaoCnpj, useValidacaoCpf, useValidacaoCep, useValidacaoFormulario } from '../validadores/utils/hooksValidacao';
+import { CampoComValidacao, CampoSelect } from '../validadores/utils/CampoComValidacao';
+import { DadosEndereco } from '../validadores/tipos/tiposValidacao';
 
 export default function Cadastro() {
   const [termosAceitos, setTermosAceitos] = useState(false);
   const [isWhatsapp, setIsWhatsapp] = useState(false);
-  const [formData, setFormData] = useState({
-    CNPJ: '',
-    CPF: ''
+  
+  // Estados para campos de endereço
+  const [endereco, setEndereco] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
+  
+  // Estados para outros campos
+  const [razaoSocial, setRazaoSocial] = useState('');
+  const [nomeFantasia, setNomeFantasia] = useState('');
+  const [inscricaoEstadual, setInscricaoEstadual] = useState('');
+  const [tipoEmpresa, setTipoEmpresa] = useState('');
+  const [nomeResponsavel, setNomeResponsavel] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [cargo, setCargo] = useState('');
+  const [volumeMensal, setVolumeMensal] = useState('');
+  const [tempoAtividade, setTempoAtividade] = useState('');
+  const [modelosInteresse, setModelosInteresse] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmaSenha, setConfirmaSenha] = useState('');
+
+  // Hooks de validação
+  const validacaoCnpj = useValidacaoCnpj();
+  const validacaoCpf = useValidacaoCpf();
+  const validacaoCep = useValidacaoCep((dadosEndereco: DadosEndereco) => {
+    // Preenche automaticamente os campos de endereço
+    setEndereco(dadosEndereco.logradouro);
+    setBairro(dadosEndereco.bairro);
+    setCidade(dadosEndereco.localidade);
+    setEstado(dadosEndereco.uf);
+    if (dadosEndereco.complemento) {
+      setComplemento(dadosEndereco.complemento);
+    }
   });
 
-  // Hook de validação de documentos
-  const {
-    validationState,
-    handleCNPJChange,
-    handleCPFChange,
-    areDocumentsValid
-  } = useDocumentValidation();
+  const { registrarValidacao, formularioValido } = useValidacaoFormulario();
+
+  // Registra validações no gerenciador
+  useEffect(() => {
+    registrarValidacao('cnpj', validacaoCnpj.estado.valido);
+  }, [validacaoCnpj.estado.valido, registrarValidacao]);
+
+  useEffect(() => {
+    registrarValidacao('cpf', validacaoCpf.estado.valido);
+  }, [validacaoCpf.estado.valido, registrarValidacao]);
+
+  useEffect(() => {
+    registrarValidacao('cep', validacaoCep.estado.valido);
+  }, [validacaoCep.estado.valido, registrarValidacao]);
 
   // Inicializa máscara de telefone (se existir)
   useEffect(() => {
@@ -40,71 +83,116 @@ export default function Cadastro() {
     }
   }, []);
 
-  // Atualiza campos do formulário
-  const updateField = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  // Manipuladores de mudança dos campos validados
-  const handleDocumentChange = async (field, value) => {
-    let maskedValue;
-    
-    if (field === 'CNPJ') {
-      maskedValue = await handleCNPJChange(value);
-    } else if (field === 'CPF') {
-      maskedValue = await handleCPFChange(value);
-    }
-    
-    updateField(field, maskedValue);
-    return maskedValue;
-  };
-
   // Submissão do formulário
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Verifica se os documentos são válidos
-    if (!areDocumentsValid()) {
-      alert('Por favor, verifique se CNPJ e CPF são válidos antes de prosseguir.');
+    // Verifica se as senhas coincidem
+    if (senha !== confirmaSenha) {
+      alert('As senhas não coincidem!');
       return;
     }
 
-    const formDataObj = new FormData(e.target);
-    const data = Object.fromEntries(formDataObj.entries());
-
-    if (data.SENHA !== data.CONFIRMA_SENHA) {
-      alert('As senhas não coincidem!');
+    // Verifica se os campos obrigatórios com validação estão válidos
+    if (!validacaoCnpj.estado.valido || !validacaoCpf.estado.valido || !validacaoCep.estado.valido) {
+      alert('Por favor, corrija os erros nos campos destacados.');
       return;
     }
 
     try {
       // Cria usuário no Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, data.EMAIL, data.SENHA);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
       const user = userCredential.user;
 
-      // Adiciona dados de validação dos documentos
-      const dataToSave = {
-        ...data,
+      // Prepara dados para salvar
+      const dadosFormulario = {
+        // Dados da empresa
+        razaoSocial,
+        nomeFantasia,
+        cnpj: validacaoCnpj.estado.valor,
+        inscricaoEstadual,
+        tipoEmpresa,
+        
+        // Endereço
+        cep: validacaoCep.estado.valor,
+        endereco,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado,
+        
+        // Dados do responsável
+        nomeResponsavel,
+        cpf: validacaoCpf.estado.valor,
+        email,
+        telefone,
+        isWhatsapp: isWhatsapp ? 'nao' : 'sim',
+        whatsapp: isWhatsapp ? whatsapp : '',
+        cargo,
+        
+        // Informações comerciais
+        volumeMensal: parseInt(volumeMensal),
+        tempoAtividade: parseInt(tempoAtividade),
+        modelosInteresse,
+        observacoes,
+        
+        // Metadados
         uid: user.uid,
         criadoEm: new Date(),
-        documentValidation: {
-          cnpj: validationState.cnpj.data,
-          cpf: validationState.cpf.data
-        }
+        termosAceitos
       };
 
       // Salva dados complementares no Firestore
-      await addDoc(collection(db, "cadastros"), dataToSave);
+      await addDoc(collection(db, "cadastros"), dadosFormulario);
 
       alert("Cadastro realizado com sucesso!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao cadastrar:", error);
       alert("Erro ao cadastrar: " + error.message);
     }
   };
+
+  // Opções para select de tipo de empresa
+  const opcoestipoEmpresa = [
+    { valor: 'LOJA_FISICA', texto: 'Loja Física' },
+    { valor: 'E-COMMERCE', texto: 'E-commerce' },
+    { valor: 'DISTRIBUIDOR', texto: 'Distribuidor' },
+    { valor: 'MARKETPLACE', texto: 'Marketplace' },
+    { valor: 'ASSISTENCIA_TECNICA', texto: 'Assistência Técnica' },
+    { valor: 'OUTRO', texto: 'Outro' }
+  ];
+
+  // Opções para select de estado
+  const opcoesEstado = [
+    { valor: 'AC', texto: 'Acre' },
+    { valor: 'AL', texto: 'Alagoas' },
+    { valor: 'AP', texto: 'Amapá' },
+    { valor: 'AM', texto: 'Amazonas' },
+    { valor: 'BA', texto: 'Bahia' },
+    { valor: 'CE', texto: 'Ceará' },
+    { valor: 'DF', texto: 'Distrito Federal' },
+    { valor: 'ES', texto: 'Espírito Santo' },
+    { valor: 'GO', texto: 'Goiás' },
+    { valor: 'MA', texto: 'Maranhão' },
+    { valor: 'MT', texto: 'Mato Grosso' },
+    { valor: 'MS', texto: 'Mato Grosso do Sul' },
+    { valor: 'MG', texto: 'Minas Gerais' },
+    { valor: 'PA', texto: 'Pará' },
+    { valor: 'PB', texto: 'Paraíba' },
+    { valor: 'PR', texto: 'Paraná' },
+    { valor: 'PE', texto: 'Pernambuco' },
+    { valor: 'PI', texto: 'Piauí' },
+    { valor: 'RJ', texto: 'Rio de Janeiro' },
+    { valor: 'RN', texto: 'Rio Grande do Norte' },
+    { valor: 'RS', texto: 'Rio Grande do Sul' },
+    { valor: 'RO', texto: 'Rondônia' },
+    { valor: 'RR', texto: 'Roraima' },
+    { valor: 'SC', texto: 'Santa Catarina' },
+    { valor: 'SP', texto: 'São Paulo' },
+    { valor: 'SE', texto: 'Sergipe' },
+    { valor: 'TO', texto: 'Tocantins' }
+  ];
 
   return (
     <div>
@@ -118,39 +206,42 @@ export default function Cadastro() {
             <h3 className="Titulo_Fieldset">Dados da empresa</h3>
             <ul className='Lista_Campos'>
               <li>
-                <label htmlFor='RAZAO_SOCIAL'>Razão Social: <span className='Asterisco'>*</span> </label>
+                <label htmlFor='RAZAO_SOCIAL'>Razão Social: <span className='Asterisco'>*</span></label>
                 <input
                   className="Campo_Texto"
                   type='text'
                   id='RAZAO_SOCIAL'
                   name='RAZAO_SOCIAL'
+                  value={razaoSocial}
+                  onChange={(e) => setRazaoSocial(e.target.value)}
                   maxLength={100}
                   required
                 />
               </li>
 
               <li>
-                <label htmlFor="NOME_FANTASIA">Nome Fantasia: </label>
+                <label htmlFor="NOME_FANTASIA">Nome Fantasia:</label>
                 <input
                   className="Campo_Texto"
                   type="text"
                   id="NOME_FANTASIA"
                   name="NOME_FANTASIA"
+                  value={nomeFantasia}
+                  onChange={(e) => setNomeFantasia(e.target.value)}
                   maxLength={100}
                 />
               </li>
 
-              {/* Campo CNPJ com validação */}
-              <ValidatedDocumentField
+              <CampoComValidacao
                 id="CNPJ"
                 name="CNPJ"
-                label="CNPJ:"
-                value={formData.CNPJ}
-                onChange={(value) => handleDocumentChange('CNPJ', value)}
-                validationState={validationState.cnpj}
-                title="Formato: 00.000.000/0000-00"
+                label="CNPJ"
+                obrigatorio={true}
+                placeholder="00.000.000/0000-00"
                 maxLength={18}
-                required
+                estado={validacaoCnpj.estado}
+                onChange={validacaoCnpj.onChange}
+                className="campo-cnpj"
               />
 
               <li>
@@ -160,23 +251,22 @@ export default function Cadastro() {
                   type="text"
                   id="INSCRICAO_ESTADUAL"
                   name="INSCRICAO_ESTADUAL"
+                  value={inscricaoEstadual}
+                  onChange={(e) => setInscricaoEstadual(e.target.value)}
                   maxLength={20}
                   required
                 />
               </li>
 
-              <li>
-                <label htmlFor="TIPO_EMPRESA">Tipo de Empresa: <span className='Asterisco'>*</span></label>
-                <select id="TIPO_EMPRESA" name="TIPO_EMPRESA" required>
-                  <option value="">Selecione</option>
-                  <option value="LOJA_FISICA">Loja Física</option>
-                  <option value="E-COMMERCE">E-commerce</option>
-                  <option value="DISTRIBUIDOR">Distribuidor</option>
-                  <option value="MARKETPLACE">Marketplace</option>
-                  <option value="ASSISTENCIA_TECNICA">Assistência Técnica</option>
-                  <option value="OUTRO">Outro</option>
-                </select>
-              </li>
+              <CampoSelect
+                id="TIPO_EMPRESA"
+                name="TIPO_EMPRESA"
+                label="Tipo de Empresa"
+                obrigatorio={true}
+                opcoes={opcoestipoEmpresa}
+                valor={tipoEmpresa}
+                onChange={setTipoEmpresa}
+              />
             </ul>
             <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
           </Box>
@@ -185,19 +275,17 @@ export default function Cadastro() {
           <Box>
             <h3 className="Titulo_Fieldset">Endereço da Empresa</h3>
             <ul className="Lista_Campos">
-              <li>
-                <label htmlFor='CEP'>CEP: <span className='Asterisco'>*</span></label>
-                <input
-                  className="Campo_Texto"
-                  type='text'
-                  id='CEP'
-                  name='CEP'
-                  pattern="\d{5}-\d{3}"
-                  title="Formato: 00000-000"
-                  maxLength={9}
-                  required
-                />
-              </li>
+              <CampoComValidacao
+                id="CEP"
+                name="CEP"
+                label="CEP"
+                obrigatorio={true}
+                placeholder="00000-000"
+                maxLength={9}
+                estado={validacaoCep.estado}
+                onChange={validacaoCep.onChange}
+                className="campo-cep"
+              />
 
               <li>
                 <label htmlFor='ENDERECO'>Endereço: <span className='Asterisco'>*</span></label>
@@ -206,6 +294,8 @@ export default function Cadastro() {
                   type='text'
                   id='ENDERECO'
                   name='ENDERECO'
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
                   maxLength={100}
                   required
                 />
@@ -218,18 +308,22 @@ export default function Cadastro() {
                   type='text'
                   id='NUMERO'
                   name='NUMERO'
+                  value={numero}
+                  onChange={(e) => setNumero(e.target.value)}
                   maxLength={10}
                   required
                 />
               </li>
 
               <li>
-                <label htmlFor='COMPLEMENTO'>Complemento: </label>
+                <label htmlFor='COMPLEMENTO'>Complemento:</label>
                 <input
                   className="Campo_Texto"
                   type='text'
                   id='COMPLEMENTO'
                   name='COMPLEMENTO'
+                  value={complemento}
+                  onChange={(e) => setComplemento(e.target.value)}
                   maxLength={50}
                 />
               </li>
@@ -241,6 +335,8 @@ export default function Cadastro() {
                   type='text'
                   id='BAIRRO'
                   name='BAIRRO'
+                  value={bairro}
+                  onChange={(e) => setBairro(e.target.value)}
                   maxLength={50}
                   required
                 />
@@ -253,44 +349,22 @@ export default function Cadastro() {
                   type='text'
                   id='CIDADE'
                   name='CIDADE'
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
                   maxLength={50}
                   required
                 />
               </li>
 
-              <li>
-                <label htmlFor="ESTADO">Estado: <span className='Asterisco'>*</span></label>
-                <select id="ESTADO" name="ESTADO" required>
-                  <option value="">Selecione</option>
-                  <option value="AC">Acre</option>
-                  <option value="AL">Alagoas</option>
-                  <option value="AP">Amapá</option>
-                  <option value="AM">Amazonas</option>
-                  <option value="BA">Bahia</option>
-                  <option value="CE">Ceará</option>
-                  <option value="DF">Distrito Federal</option>
-                  <option value="ES">Espírito Santo</option>
-                  <option value="GO">Goiás</option>
-                  <option value="MA">Maranhão</option>
-                  <option value="MT">Mato Grosso</option>
-                  <option value="MS">Mato Grosso do Sul</option>
-                  <option value="MG">Minas Gerais</option>
-                  <option value="PA">Pará</option>
-                  <option value="PB">Paraíba</option>
-                  <option value="PR">Paraná</option>
-                  <option value="PE">Pernambuco</option>
-                  <option value="PI">Piauí</option>
-                  <option value="RJ">Rio de Janeiro</option>
-                  <option value="RN">Rio Grande do Norte</option>
-                  <option value="RS">Rio Grande do Sul</option>
-                  <option value="RO">Rondônia</option>
-                  <option value="RR">Roraima</option>
-                  <option value="SC">Santa Catarina</option>
-                  <option value="SP">São Paulo</option>
-                  <option value="SE">Sergipe</option>
-                  <option value="TO">Tocantins</option>
-                </select>
-              </li>
+              <CampoSelect
+                id="ESTADO"
+                name="ESTADO"
+                label="Estado"
+                obrigatorio={true}
+                opcoes={opcoesEstado}
+                valor={estado}
+                onChange={setEstado}
+              />
             </ul>
             <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
           </Box>
@@ -306,22 +380,23 @@ export default function Cadastro() {
                   type='text'
                   id='NOME_RESPONSAVEL'
                   name='NOME_RESPONSAVEL'
+                  value={nomeResponsavel}
+                  onChange={(e) => setNomeResponsavel(e.target.value)}
                   maxLength={100}
                   required
                 />
               </li>
 
-              {/* Campo CPF com validação */}
-              <ValidatedDocumentField
+              <CampoComValidacao
                 id="CPF"
                 name="CPF"
-                label="CPF:"
-                value={formData.CPF}
-                onChange={(value) => handleDocumentChange('CPF', value)}
-                validationState={validationState.cpf}
-                title="Formato: 000.000.000-00"
+                label="CPF"
+                obrigatorio={true}
+                placeholder="000.000.000-00"
                 maxLength={14}
-                required
+                estado={validacaoCpf.estado}
+                onChange={validacaoCpf.onChange}
+                className="campo-cpf"
               />
 
               <li>
@@ -331,6 +406,8 @@ export default function Cadastro() {
                   type='email'
                   id='EMAIL'
                   name='EMAIL'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   maxLength={100}
                   required
                 />
@@ -343,6 +420,8 @@ export default function Cadastro() {
                   type='text'
                   id='TELEFONE'
                   name='TELEFONE'
+                  value={telefone}
+                  onChange={(e) => setTelefone(e.target.value)}
                   placeholder="(00) 00000-0000"
                   maxLength={15}
                   required
@@ -381,12 +460,14 @@ export default function Cadastro() {
 
               {isWhatsapp && (
                 <li id='whatsapp_field'>
-                  <label htmlFor='WHATSAPP'>Número do WhatsApp: </label>
+                  <label htmlFor='WHATSAPP'>Número do WhatsApp:</label>
                   <input
                     className="Campo_Texto"
                     type='text'
                     id='WHATSAPP'
                     name='WHATSAPP'
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
                     placeholder="(00) 00000-0000"
                     maxLength={15}
                   />
@@ -400,6 +481,8 @@ export default function Cadastro() {
                   type='text'
                   id='CARGO'
                   name='CARGO'
+                  value={cargo}
+                  onChange={(e) => setCargo(e.target.value)}
                   maxLength={50}
                   required
                 />
@@ -419,6 +502,8 @@ export default function Cadastro() {
                   type="number"
                   id="VOLUME_MENSAL"
                   name="VOLUME_MENSAL"
+                  value={volumeMensal}
+                  onChange={(e) => setVolumeMensal(e.target.value)}
                   min="0"
                   max="1000000"
                   step="1"
@@ -433,6 +518,8 @@ export default function Cadastro() {
                   type="number"
                   id="TEMPO_ATIVIDADE"
                   name="TEMPO_ATIVIDADE"
+                  value={tempoAtividade}
+                  onChange={(e) => setTempoAtividade(e.target.value)}
                   min="0"
                   max="100"
                   required
@@ -440,22 +527,26 @@ export default function Cadastro() {
               </li>
 
               <li>
-                <label htmlFor="MODELOS_INTERESSE">Modelos de iPhone de interesse: </label>
+                <label htmlFor="MODELOS_INTERESSE">Modelos de iPhone de interesse:</label>
                 <textarea
                   className='Campo_TextArea'
                   id="MODELOS_INTERESSE"
                   name="MODELOS_INTERESSE"
+                  value={modelosInteresse}
+                  onChange={(e) => setModelosInteresse(e.target.value)}
                   maxLength={500}
                   rows={4}
                 ></textarea>
               </li>
 
               <li>
-                <label htmlFor="OBSERVACOES">Observações adicionais: </label>
+                <label htmlFor="OBSERVACOES">Observações adicionais:</label>
                 <textarea
                   className='Campo_TextArea'
                   id="OBSERVACOES"
                   name="OBSERVACOES"
+                  value={observacoes}
+                  onChange={(e) => setObservacoes(e.target.value)}
                   maxLength={500}
                   rows={4}
                 ></textarea>
@@ -469,12 +560,13 @@ export default function Cadastro() {
             <h3 className="Titulo_Fieldset">Criação de Conta</h3>
             <ul className="Lista_Campos">
               <li>
-                <label htmlFor='SENHA'>Senha: <span className='Asterisco'>*</span></label>
+                <label htmlFor='SENHA'>Senha:</label>
                 <input
-                  className="Campo_Texto"
                   type='password'
                   id='SENHA'
                   name='SENHA'
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   minLength={6}
                   maxLength={20}
                   required
@@ -482,67 +574,45 @@ export default function Cadastro() {
               </li>
 
               <li>
-                <label htmlFor='CONFIRMA_SENHA'>Confirmar Senha: <span className='Asterisco'>*</span></label>
+                <label htmlFor='CONFIRMA_SENHA'>Confirmar Senha:</label>
                 <input
-                  className="Campo_Texto"
                   type='password'
                   id='CONFIRMA_SENHA'
                   name='CONFIRMA_SENHA'
+                  value={confirmaSenha}
+                  onChange={(e) => setConfirmaSenha(e.target.value)}
                   minLength={6}
                   maxLength={20}
                   required
                 />
               </li>
             </ul>
-            <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
           </Box>
 
           {/* --- Termos --- */}
           <Box>
             <h3 className="Titulo_Fieldset">Aceitar Termos e Condições</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <input
-                type="checkbox"
-                id="TERMOS"
-                name="TERMOS"
-                value="TRUE"
-                onChange={(e) => setTermosAceitos(e.target.checked)}
-                required
-              />
-              <label htmlFor="TERMOS">Li e aceito os termos e condições <span className='Asterisco'>*</span></label>
-            </div>
+            <input
+              type="checkbox"
+              id="TERMOS"
+              name="TERMOS"
+              value="TRUE"
+              onChange={(e) => setTermosAceitos(e.target.checked)}
+            />
+            <label htmlFor="TERMOS">Li e aceito os termos e condições</label>
           </Box>
           
           <Botao_Form_Grande
             color="#10b981"
             type="submit"
-            disabled={!termosAceitos || !areDocumentsValid()}
-            style={{
-              opacity: (!termosAceitos || !areDocumentsValid()) ? 0.6 : 1
-            }}
+            disabled={!termosAceitos}
           >
-            Enviar Cadastro
+            Cadastrar
           </Botao_Form_Grande>
 
-          {/* Indicador de status dos documentos - estilo consistente */}
-          {(!areDocumentsValid() && (validationState.cnpj.isValid !== null || validationState.cpf.isValid !== null)) && (
-            <p className='Texto' style={{ 
-              marginTop: '1rem', 
-              padding: '10px', 
-              backgroundColor: '#fef2f2', 
-              border: '1px solid #fecaca', 
-              borderRadius: '4px',
-              color: '#dc2626',
-              fontSize: '14px',
-              textAlign: 'center'
-            }}>
-              ⚠️ Aguarde a validação completa dos documentos (CNPJ e CPF) para enviar o cadastro
-            </p>
-          )}
         </form>
-
-        <p className='Texto'>Já tem uma conta? <Link href="/Login">Faça login aqui!</Link></p>
       </div>
     </div>
   );
 }
+

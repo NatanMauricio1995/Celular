@@ -1,0 +1,199 @@
+/* Estilos para campos com validação */
+
+/* Campo com erro */
+.campo-erro {
+  border: 2px solid #ef4444 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.campo-erro:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+  outline: none !important;
+}
+
+/* Campo válido */
+.campo-valido {
+  border: 2px solid #10b981 !important;
+  background-color: #f0fdf4 !important;
+}
+
+.campo-valido:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+  outline: none !important;
+}
+
+/* Campo carregando */
+.campo-carregando {
+  border: 2px solid #f59e0b !important;
+  background-color: #fffbeb !important;
+  position: relative;
+}
+
+.campo-carregando::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f59e0b;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Mensagem de erro */
+.mensagem-erro {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.mensagem-erro::before {
+  content: '⚠️';
+  font-size: 0.75rem;
+}
+
+/* Mensagem de sucesso */
+.mensagem-sucesso {
+  color: #10b981;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.mensagem-sucesso::before {
+  content: '✅';
+  font-size: 0.75rem;
+}
+
+/* Mensagem de carregamento */
+.mensagem-carregando {
+  color: #f59e0b;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.mensagem-carregando::before {
+  content: '⏳';
+  font-size: 0.75rem;
+}
+
+/* Container do campo com validação */
+.container-campo-validacao {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Label com indicador de obrigatório */
+.label-obrigatorio::after {
+  content: ' *';
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Indicador de status no campo */
+.indicador-status {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.indicador-status.erro {
+  color: #ef4444;
+}
+
+.indicador-status.sucesso {
+  color: #10b981;
+}
+
+.indicador-status.carregando {
+  color: #f59e0b;
+}
+
+/* Transições suaves */
+.campo-validacao {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .mensagem-erro,
+  .mensagem-sucesso,
+  .mensagem-carregando {
+    font-size: 0.8rem;
+  }
+  
+  .indicador-status {
+    font-size: 0.9rem;
+  }
+}
+
+/* Estados específicos para diferentes tipos de campo */
+.campo-cnpj.erro,
+.campo-cpf.erro,
+.campo-cep.erro {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.campo-cnpj.valido,
+.campo-cpf.valido,
+.campo-cep.valido {
+  border-color: #10b981 !important;
+  background-color: #f0fdf4 !important;
+}
+
+/* Tooltip para mensagens de erro */
+.tooltip-erro {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip-erro:hover::after {
+  content: attr(data-erro);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1f2937;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 0.25rem;
+}
+
+.tooltip-erro:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
