@@ -35,42 +35,57 @@ export default function Login() {
     <>
       <Header_Login className="Header_Login" />
       <div className="login-container">
-        <h1>Entre</h1>
-        <form onSubmit={handleLogin}>
-          <label htmlFor="email">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
+        
+        <section className="Entrada_Login">
+          <div>
+            <img 
+              src="https://raw.githubusercontent.com/NatanMauricio1995/Fotos-Celulares/refs/heads/main/SHARKS%20TECHNOLOGY%20BRANCO.png"
+              alt="Sharks Technology Logo"
+              className="Logo" />
+          </div>
+          <div className="Form_Login">
+            <h1>Entre</h1>
+            <form onSubmit={handleLogin}>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+              />
+              
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+              />
+              
+              <button id = "Entrar" type="submit" disabled={loading}>
+                {loading ? "Entrando..." : "CONTINUAR"}
+              </button>
+            </form>
+
+            {error && <p className="error">{error}</p>}
+
+            <Link id = "Trocar_Senha" href="#">Esqueci minha senha</Link>
+
+            <div id = "Ou">
+              <span>OU</span>
+            </div>
+
+            <div id = "Pergunta">
+              Novo na Sharks?{" "}
+              <Link id = "Cadastro" href="/Cadastro">Cadastre-se aqui!</Link>
+            </div>
+
+
           
-          <label htmlFor="password">Senha:</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-          
-          <button type="submit" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
-          </button>
-        </form>
-
-        {error && <p className="error">{error}</p>}
-
-        <Link href="#">Esqueci minha senha</Link>
-
-        <p>OU</p>
-        <p>
-          Novo na Sharks?{" "}
-          <Link href="/Cadastro">Cadastre-se aqui!</Link>
-        </p>
+          </div>
+       </section>
       </div>
     </>
   );
