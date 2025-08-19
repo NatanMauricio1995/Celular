@@ -1,0 +1,20 @@
+.Botao_Form_Grande {
+    border: none;
+    color: #fff;
+    padding: 14px 24px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: bold;
+}
+
+.Botao_Form_Grande:hover {
+    opacity: 0.9;
+    transform: scale(1.03);
+}
+
+.Botao_Form_Grande:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

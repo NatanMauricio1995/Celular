@@ -6,6 +6,7 @@ import '../styles/Cadastro.css';
 import { phoneUtils } from '../utils/phoneUtils';
 import Header_Cadastro from "../components/layout/Header_Cadastro/Header_Cadastro";
 import Box from "../components/layout/Box/Box";
+import Botao_Form_Grande from '../components/ui/Botao_Form_Grande/Botao_Form_Grande';
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
@@ -446,8 +447,8 @@ export default function Cadastro() {
           </Box>
 
           {/* --- Termos --- */}
-          <div>
-            <p>Aceitar Termos e Condições </p>
+          <Box>
+            <h3 className="Titulo_Fieldset">Aceitar Termos e Condições </h3>
             <input
               type="checkbox"
               id="TERMOS"
@@ -456,14 +457,18 @@ export default function Cadastro() {
               onChange={(e) => setTermosAceitos(e.target.checked)}
             />
             <label htmlFor="TERMOS">Li e aceito os termos e condições</label>
-          </div>
-
-          <button type="submit" disabled={!termosAceitos}>
+          </Box>
+          
+          <Botao_Form_Grande
+            color = "#10b981"
+            type = "submit"
+            disabled={!termosAceitos}
+          >
             Enviar Cadastro
-          </button>
+          </Botao_Form_Grande>
         </form>
 
-        <p>Já tem uma conta? <Link href="/Login">Faça login aqui!</Link></p>
+        <p className='Texto'>Já tem uma conta? <Link href="/Login">Faça login aqui!</Link></p>
       </div>
     </div>
   );
