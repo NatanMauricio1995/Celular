@@ -1,26 +1,97 @@
-.Corpo 
-{
-    display: flex;              
-    flex-direction: column;     
-    justify-content: center;    
-    align-items: center;        
+.Corpo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 70%;
-    margin: 0 auto;             
-    min-height: 100vh;         
+    max-width: 1200px;       /* não cresce demais em telas grandes */
+    min-width: 300px;        /* não fica muito estreito */
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;  /* garante que padding não aumente a largura */
 }
 
-.Formulario 
-{
+.Formulario {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;                
+    width: 100%;
+    gap: 15px;
+    box-sizing: border-box;
 }
 
-h1
-{
-    align-self: left;
-    justify-self: left;
+h1 {
+    align-self: flex-start;
     padding-left: 2em;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    word-break: break-word;  /* evita estouro de texto */
 }
 
+/* Campos de status */
+.campo-invalido {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px #dc2626 !important;
+}
+
+.campo-valido {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 1px #16a34a !important;
+}
+
+.campo-carregando {
+    border-color: #ca8a04 !important;
+    box-shadow: 0 0 0 1px #ca8a04 !important;
+}
+
+/* ------------------- RESPONSIVIDADE ------------------- */
+
+/* Tablets (até 1024px) */
+@media (max-width: 1024px) {
+    .Corpo {
+        width: 85%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        padding-left: 1.5em;
+    }
+}
+
+/* Tablets pequenos / grandes smartphones (até 768px) */
+@media (max-width: 768px) {
+    .Corpo {
+        width: 90%;
+        padding: 12px;
+    }
+
+    .Formulario {
+        gap: 12px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        padding-left: 1em;
+    }
+}
+
+/* Smartphones (até 480px) */
+@media (max-width: 480px) {
+    .Corpo {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .Formulario {
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+        padding-left: 0.5em;
+        text-align: center;
+        align-self: center;
+    }
+}

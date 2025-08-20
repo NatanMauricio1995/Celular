@@ -2,37 +2,39 @@
     background-color: var(--Cor_AzulEscuro);
     margin: 0;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    box-sizing: border-box;
 }
 
-html, main
-{
+html, main {
     background-color: var(--Cor_CinzaClaro);
 }
+
 h1 {
-    font-size: 2rem;
+    font-size: clamp(1.3rem, 4vw, 2rem);
     margin-bottom: 1rem;
     text-align: center;
     width: 100%;
-    text-align: left;
 }
 
 .Logo {
     width: auto;
-    height: 150px;
-
+    height: clamp(80px, 15vw, 150px);
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .Entrada_Login {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    flex-wrap: wrap; /* permite quebra em telas pequenas */
-    gap: 20px;
+    flex-wrap: wrap;
+    gap: clamp(20px, 5vw, 40px);
     width: 100%;
     max-width: 1200px;
     height: auto;
@@ -41,13 +43,15 @@ h1 {
 .Form_Login {
     background-color: var(--Cor_CinzaClaro);
     border-radius: 10px;
-    padding: 20px;
+    padding: clamp(15px, 4vw, 30px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 400px; /* limite no desktop */
+    max-width: 400px;
+    min-width: 280px;
+    box-sizing: border-box;
 }
 
 .Form_Login form {
@@ -55,130 +59,235 @@ h1 {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 }
 
 #email, #password {
-    width: 90%;
-    padding: 12px;
-    margin: 10px;
+    width: 100%;
+    padding: clamp(10px, 3vw, 15px);
+    margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     font-family: var(--Fonte_Texto);
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#email:focus, #password:focus {
+    outline: none;
+    border-color: var(--Cor_AzulPrincipal);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 #Entrar {
     width: 100%;
-    padding: 12px;
+    padding: clamp(10px, 3vw, 15px);
     background-color: var(--Cor_AzulPrincipal);
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     margin: 12px 0;
     font-family: var(--Fonte_Botao);
     font-weight: 500;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
+    box-sizing: border-box;
 }
 
 #Entrar:hover {
     background-color: var(--Cor_AzulEscuro);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#Entrar:active {
+    transform: translateY(0);
 }
 
 #Trocar_Senha {
     width: 100%;
-    align-self: flex-start;
+    text-align: left;
     font-family: var(--Fonte_Texto);
-    transition: font-weight 0.3s ease;
+    transition: all 0.3s ease;
     cursor: pointer;
-    color: var(--Cor_AzulPrincipal)
+    color: var(--Cor_AzulPrincipal);
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    text-decoration: none;
+    display: inline-block;
 }
 
 #Trocar_Senha:hover {
     font-weight: 900;
+    text-decoration: underline;
 }
 
-
 #Ou {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-  font-weight: bold;
-  margin: 20px 0;
-  width: 100%;
-  font-family: var(--Fonte_Titulos);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-weight: bold;
+    margin: 20px 0;
+    width: 100%;
+    font-family: var(--Fonte_Titulos);
+    font-size: clamp(0.8rem, 2vw, 1rem);
 }
 
 #Ou::before,
 #Ou::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid #ccc;
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
 }
 
 #Ou span {
-  margin: 0 10px; /* espaço entre o texto e as linhas */
+    margin: 0 10px;
+    white-space: nowrap;
 }
 
-#Pergunta{
+#Pergunta {
     font-family: var(--Fonte_Titulos);
     font-weight: 500;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    text-align: center;
+    margin: 10px 0;
 }
 
-#Cadastro
-{
+#Cadastro {
     color: var(--Cor_VerdeSucesso);
     text-decoration: none;
-    transition: font-weight 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: clamp(0.8rem, 2vw, 1rem);
 }
 
-#Cadastro:hover
-{
+#Cadastro:hover {
     font-weight: 900;
+    text-decoration: underline;
 }
 
-/* ================== Responsividade ================== */
+/* ================== Responsividade Aprimorada ================== */
 
-/* Tablets */
-@media (max-width: 768px) {
-    .Entrada_Login {
-        flex-direction: column;
-        gap: 30px;
+/* Dispositivos muito pequenos */
+@media (max-width: 320px) {
+    .login-container {
+        padding: 10px;
     }
-
-    .Logo {
-        height: 120px;
+    
+    .Form_Login {
+        min-width: 260px;
+        padding: 15px;
     }
-
-    h1 {
-        font-size: 1.5rem;
+    
+    #Entrar {
+        letter-spacing: 1px;
     }
 }
 
 /* Celulares */
 @media (max-width: 480px) {
+    .Entrada_Login {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 10px;
+    }
+    
     .Form_Login {
-        padding: 15px;
+        margin: 0 auto;
     }
+}
 
-    #email, #password {
-        font-size: 0.9rem;
+/* Tablets em modo retrato */
+@media (min-width: 481px) and (max-width: 768px) {
+    .Entrada_Login {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .Form_Login {
+        max-width: 450px;
+    }
+}
+
+/* Tablets em modo paisagem */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .Entrada_Login {
+        flex-direction: row;
+        justify-content: center;
+        gap: 40px;
+    }
+    
+    .Form_Login {
+        max-width: 380px;
+    }
+}
+
+/* Desktops pequenos */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .Entrada_Login {
+        gap: 50px;
+    }
+    
+    .Form_Login {
+        max-width: 400px;
+    }
+}
+
+/* Desktops grandes */
+@media (min-width: 1441px) {
+    .login-container {
+        padding: 40px;
+    }
+    
+    .Entrada_Login {
+        gap: 60px;
+    }
+    
+    .Form_Login {
+        max-width: 450px;
+        padding: 35px;
+    }
+}
+
+/* Orientação paisagem em dispositivos móveis */
+@media (max-height: 500px) and (orientation: landscape) {
+    .login-container {
         padding: 10px;
     }
-
-    #Entrar {
-        font-size: 0.9rem;
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 1.3rem;
-    }
-
+    
     .Logo {
-        height: 100px;
+        height: clamp(60px, 10vh, 100px);
+    }
+    
+    .Entrada_Login {
+        flex-direction: row;
+        gap: 20px;
+    }
+    
+    .Form_Login {
+        max-width: 350px;
+        padding: 20px;
+    }
+}
+
+/* Preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    #email, #password {
+        border: 2px solid #333;
+    }
+    
+    #email:focus, #password:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
     }
 }

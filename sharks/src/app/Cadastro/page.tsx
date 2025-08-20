@@ -14,9 +14,9 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 
 // Importa validadores
-import { useValidacaoCnpj, useValidacaoCpf, useValidacaoCep, useValidacaoFormulario } from '../validadores/utils/hooksValidacao';
-import { CampoComValidacao, CampoSelect } from '../validadores/utils/CampoComValidacao';
-import { DadosEndereco } from '../validadores/tipos/tiposValidacao';
+import { useValidacaoCnpj, useValidacaoCpf, useValidacaoCep, useValidacaoFormulario } from '../Validadores/utils/hooksValidacao';
+import { CampoComValidacao, CampoSelect } from '../Validadores/utils/CampoComValidacao';
+import { DadosEndereco } from '../validadores_v2/tipos/tiposValidacao';
 
 export default function Cadastro() {
   const [termosAceitos, setTermosAceitos] = useState(false);
@@ -239,9 +239,10 @@ export default function Cadastro() {
                 obrigatorio={true}
                 placeholder="00.000.000/0000-00"
                 maxLength={18}
-                estado={validacaoCnpj.estado}
+                valor={validacaoCnpj.estado.valor}
                 onChange={validacaoCnpj.onChange}
-                className="campo-cnpj"
+                classeCssOriginal="Campo_Texto"
+                classeCssValidacao={validacaoCnpj.classeCss}
               />
 
               <li>
@@ -282,9 +283,10 @@ export default function Cadastro() {
                 obrigatorio={true}
                 placeholder="00000-000"
                 maxLength={9}
-                estado={validacaoCep.estado}
+                valor={validacaoCep.estado.valor}
                 onChange={validacaoCep.onChange}
-                className="campo-cep"
+                classeCssOriginal="Campo_Texto"
+                classeCssValidacao={validacaoCep.classeCss}
               />
 
               <li>
@@ -394,9 +396,10 @@ export default function Cadastro() {
                 obrigatorio={true}
                 placeholder="000.000.000-00"
                 maxLength={14}
-                estado={validacaoCpf.estado}
+                valor={validacaoCpf.estado.valor}
                 onChange={validacaoCpf.onChange}
-                className="campo-cpf"
+                classeCssOriginal="Campo_Texto"
+                classeCssValidacao={validacaoCpf.classeCss}
               />
 
               <li>
@@ -599,7 +602,7 @@ export default function Cadastro() {
               value="TRUE"
               onChange={(e) => setTermosAceitos(e.target.checked)}
             />
-            <label htmlFor="TERMOS">Li e aceito os termos e condições</label>
+            <label htmlFor="TERMOS">Li e aceito os termos e condições<p></p></label>
           </Box>
           
           <Botao_Form_Grande

@@ -3,7 +3,7 @@ import { ResultadoValidacaoApi, DadosEndereco } from '../tipos/tiposValidacao';
 /**
  * Valida e consulta dados de CEP na API ViaCEP
  * @param cep - CEP a ser consultado (com ou sem formatação)
- * @returns Resultado da consulta com dados do endereço
+ * @returns Resultado da consulta (apenas boolean e dados)
  */
 export async function consultarCep(cep: string): Promise<ResultadoValidacaoApi> {
   try {
@@ -12,18 +12,12 @@ export async function consultarCep(cep: string): Promise<ResultadoValidacaoApi> 
 
     // Valida formato do CEP
     if (cepLimpo.length !== 8) {
-      return {
-        valido: false,
-        erro: 'CEP deve conter 8 dígitos'
-      };
+      return { valido: false };
     }
 
     // Verifica se o CEP não é uma sequência inválida
     if (/^(\d)\1{7}$/.test(cepLimpo)) {
-      return {
-        valido: false,
-        erro: 'CEP inválido'
-      };
+      return { valido: false };
     }
 
     // Formata CEP para consulta
@@ -41,20 +35,14 @@ export async function consultarCep(cep: string): Promise<ResultadoValidacaoApi> 
     });
 
     if (!response.ok) {
-      return {
-        valido: false,
-        erro: `Erro na consulta: ${response.status} - ${response.statusText}`
-      };
+      return { valido: false };
     }
 
     const dados = await response.json();
 
     // Verifica se o CEP foi encontrado
     if (dados.erro) {
-      return {
-        valido: false,
-        erro: 'CEP não encontrado'
-      };
+      return { valido: false };
     }
 
     // Monta os dados do endereço
@@ -78,10 +66,7 @@ export async function consultarCep(cep: string): Promise<ResultadoValidacaoApi> 
 
   } catch (error) {
     console.error('Erro ao consultar CEP:', error);
-    return {
-      valido: false,
-      erro: 'Erro de conexão com o serviço de CEP. Tente novamente.'
-    };
+    return { valido: false };
   }
 }
 

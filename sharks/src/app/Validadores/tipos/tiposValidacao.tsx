@@ -1,19 +1,16 @@
-// Tipos e interfaces para validações de documentos
+// Tipos e interfaces para validações de documentos (sem mensagens de texto)
 
 export interface ResultadoValidacao {
   valido: boolean;
-  erro?: string;
   dados?: any;
 }
 
 export interface ResultadoValidacaoMatematica {
   valido: boolean;
-  erro?: string;
 }
 
 export interface ResultadoValidacaoApi {
   valido: boolean;
-  erro?: string;
   dados?: DadosReceita | DadosEndereco;
 }
 
@@ -50,7 +47,6 @@ export interface DadosEndereco {
 export interface EstadoCampo {
   valor: string;
   valido: boolean;
-  erro?: string;
   carregando?: boolean;
 }
 
@@ -59,4 +55,12 @@ export interface ConfiguracaoValidacao {
   validarApi: boolean;
   preencherAutomatico?: boolean;
 }
+
+// Classes CSS para estados dos campos
+export const CLASSES_VALIDACAO = {
+  ERRO: 'campo-invalido',
+  VALIDO: 'campo-valido', 
+  CARREGANDO: 'campo-carregando',
+  NEUTRO: ''
+} as const;
 

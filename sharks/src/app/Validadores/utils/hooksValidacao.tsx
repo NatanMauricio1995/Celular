@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { EstadoCampo, ConfiguracaoValidacao, DadosEndereco } from '../tipos/tiposValidacao';
+import { EstadoCampo, ConfiguracaoValidacao, DadosEndereco, CLASSES_VALIDACAO } from '../tipos/tiposValidacao';
 import { validarCnpjMatematico, aplicarMascaraCnpj } from '../matematicos/validadorCnpj';
 import { validarCpfMatematico, aplicarMascaraCpf } from '../matematicos/validadorCpf';
 import { consultarCnpjReceitaFederal } from '../apis/servicoReceitaFederal';
@@ -7,6 +7,7 @@ import { consultarCep, aplicarMascaraCep } from '../apis/servicoCep';
 
 /**
  * Hook para validação de CNPJ com verificação matemática e consulta à API
+ * Retorna apenas classes CSS para aplicar ao campo
  */
 export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validarMatematica: true, validarApi: true }) {
   const [estado, setEstado] = useState<EstadoCampo>({
@@ -16,7 +17,7 @@ export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validar
 
   const validar = useCallback(async (valor: string) => {
     if (!valor.trim()) {
-      setEstado(prev => ({ ...prev, valido: true, erro: undefined }));
+      setEstado(prev => ({ ...prev, valido: true, carregando: false }));
       return;
     }
 
@@ -28,7 +29,6 @@ export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validar
         setEstado(prev => ({
           ...prev,
           valido: false,
-          erro: resultadoMatematico.erro,
           carregando: false
         }));
         return;
@@ -45,7 +45,6 @@ export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validar
         setEstado(prev => ({
           ...prev,
           valido: resultadoApi.valido,
-          erro: resultadoApi.valido ? undefined : resultadoApi.erro,
           carregando: false
         }));
         
@@ -54,12 +53,11 @@ export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validar
         setEstado(prev => ({
           ...prev,
           valido: false,
-          erro: 'Erro ao validar CNPJ',
           carregando: false
         }));
       }
     } else {
-      setEstado(prev => ({ ...prev, valido: true, erro: undefined }));
+      setEstado(prev => ({ ...prev, valido: true, carregando: false }));
     }
   }, [configuracao]);
 
@@ -73,15 +71,29 @@ export function useValidacaoCnpj(configuracao: ConfiguracaoValidacao = { validar
     }
   }, [validar]);
 
+  // Determina a classe CSS baseada no estado
+  const obterClasseCss = useCallback(() => {
+    if (estado.carregando) {
+      return CLASSES_VALIDACAO.CARREGANDO;
+    } else if (!estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.ERRO;
+    } else if (estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.VALIDO;
+    }
+    return CLASSES_VALIDACAO.NEUTRO;
+  }, [estado]);
+
   return {
     estado,
     onChange,
-    validar
+    validar,
+    classeCss: obterClasseCss()
   };
 }
 
 /**
  * Hook para validação de CPF com verificação matemática e consulta à API
+ * Retorna apenas classes CSS para aplicar ao campo
  */
 export function useValidacaoCpf(configuracao: ConfiguracaoValidacao = { validarMatematica: true, validarApi: true }) {
   const [estado, setEstado] = useState<EstadoCampo>({
@@ -91,7 +103,7 @@ export function useValidacaoCpf(configuracao: ConfiguracaoValidacao = { validarM
 
   const validar = useCallback(async (valor: string) => {
     if (!valor.trim()) {
-      setEstado(prev => ({ ...prev, valido: true, erro: undefined }));
+      setEstado(prev => ({ ...prev, valido: true, carregando: false }));
       return;
     }
 
@@ -103,16 +115,14 @@ export function useValidacaoCpf(configuracao: ConfiguracaoValidacao = { validarM
         setEstado(prev => ({
           ...prev,
           valido: false,
-          erro: resultadoMatematico.erro,
           carregando: false
         }));
         return;
       }
     }
 
-    // Segunda etapa: Para CPF, geralmente a validação matemática é suficiente
-    // A consulta à API da Receita Federal para CPF é mais restrita
-    setEstado(prev => ({ ...prev, valido: true, erro: undefined, carregando: false }));
+    // Para CPF, geralmente a validação matemática é suficiente
+    setEstado(prev => ({ ...prev, valido: true, carregando: false }));
   }, [configuracao]);
 
   const onChange = useCallback((valor: string) => {
@@ -125,15 +135,29 @@ export function useValidacaoCpf(configuracao: ConfiguracaoValidacao = { validarM
     }
   }, [validar]);
 
+  // Determina a classe CSS baseada no estado
+  const obterClasseCss = useCallback(() => {
+    if (estado.carregando) {
+      return CLASSES_VALIDACAO.CARREGANDO;
+    } else if (!estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.ERRO;
+    } else if (estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.VALIDO;
+    }
+    return CLASSES_VALIDACAO.NEUTRO;
+  }, [estado]);
+
   return {
     estado,
     onChange,
-    validar
+    validar,
+    classeCss: obterClasseCss()
   };
 }
 
 /**
  * Hook para validação de CEP com preenchimento automático de endereço
+ * Retorna apenas classes CSS para aplicar ao campo
  */
 export function useValidacaoCep(
   onEnderecoEncontrado?: (endereco: DadosEndereco) => void
@@ -145,7 +169,7 @@ export function useValidacaoCep(
 
   const validar = useCallback(async (valor: string) => {
     if (!valor.trim()) {
-      setEstado(prev => ({ ...prev, valido: true, erro: undefined }));
+      setEstado(prev => ({ ...prev, valido: true, carregando: false }));
       return;
     }
 
@@ -158,7 +182,6 @@ export function useValidacaoCep(
         setEstado(prev => ({
           ...prev,
           valido: true,
-          erro: undefined,
           carregando: false
         }));
         
@@ -170,7 +193,6 @@ export function useValidacaoCep(
         setEstado(prev => ({
           ...prev,
           valido: false,
-          erro: resultado.erro,
           carregando: false
         }));
       }
@@ -178,7 +200,6 @@ export function useValidacaoCep(
       setEstado(prev => ({
         ...prev,
         valido: false,
-        erro: 'Erro ao validar CEP',
         carregando: false
       }));
     }
@@ -194,10 +215,23 @@ export function useValidacaoCep(
     }
   }, [validar]);
 
+  // Determina a classe CSS baseada no estado
+  const obterClasseCss = useCallback(() => {
+    if (estado.carregando) {
+      return CLASSES_VALIDACAO.CARREGANDO;
+    } else if (!estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.ERRO;
+    } else if (estado.valido && estado.valor.trim()) {
+      return CLASSES_VALIDACAO.VALIDO;
+    }
+    return CLASSES_VALIDACAO.NEUTRO;
+  }, [estado]);
+
   return {
     estado,
     onChange,
-    validar
+    validar,
+    classeCss: obterClasseCss()
   };
 }
 

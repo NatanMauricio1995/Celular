@@ -1,6 +1,4 @@
 import React from 'react';
-import { EstadoCampo } from '../tipos/tiposValidacao';
-import './estilosValidacao.css';
 
 interface PropriedadesCampoComValidacao {
   id: string;
@@ -10,15 +8,17 @@ interface PropriedadesCampoComValidacao {
   obrigatorio?: boolean;
   placeholder?: string;
   maxLength?: number;
-  estado: EstadoCampo;
+  valor: string;
   onChange: (valor: string) => void;
   onBlur?: () => void;
-  className?: string;
+  classeCssOriginal?: string;
+  classeCssValidacao?: string;
   disabled?: boolean;
 }
 
 /**
- * Componente de campo de entrada com validação integrada
+ * Componente de campo de entrada que aplica apenas classes CSS para validação
+ * Não altera os estilos originais dos campos, apenas adiciona classes de estado
  */
 export function CampoComValidacao({
   id,
@@ -28,78 +28,37 @@ export function CampoComValidacao({
   obrigatorio = false,
   placeholder,
   maxLength,
-  estado,
+  valor,
   onChange,
   onBlur,
-  className = '',
+  classeCssOriginal = 'Campo_Texto',
+  classeCssValidacao = '',
   disabled = false
 }: PropriedadesCampoComValidacao) {
   
-  // Determina a classe CSS baseada no estado
-  const obterClasseCampo = () => {
-    let classes = `Campo_Texto campo-validacao ${className}`;
-    
-    if (estado.carregando) {
-      classes += ' campo-carregando';
-    } else if (!estado.valido && estado.erro) {
-      classes += ' campo-erro';
-    } else if (estado.valor && estado.valido) {
-      classes += ' campo-valido';
-    }
-    
-    return classes;
-  };
-
-  // Determina o ícone de status
-  const obterIconeStatus = () => {
-    if (estado.carregando) {
-      return <span className="indicador-status carregando">⏳</span>;
-    } else if (!estado.valido && estado.erro) {
-      return <span className="indicador-status erro">❌</span>;
-    } else if (estado.valor && estado.valido) {
-      return <span className="indicador-status sucesso">✅</span>;
-    }
-    return null;
-  };
-
-  // Determina a mensagem a ser exibida
-  const obterMensagem = () => {
-    if (estado.carregando) {
-      return <div className="mensagem-carregando">Validando...</div>;
-    } else if (!estado.valido && estado.erro) {
-      return <div className="mensagem-erro">{estado.erro}</div>;
-    }
-    return null;
-  };
+  // Combina a classe original com a classe de validação
+  const classeCompleta = `${classeCssOriginal} ${classeCssValidacao}`.trim();
 
   return (
-    <li className="container-campo-validacao">
-      <label 
-        htmlFor={id} 
-        className={obrigatorio ? 'label-obrigatorio' : ''}
-      >
+    <li>
+      <label htmlFor={id}>
         {label}
         {obrigatorio && <span className="Asterisco"> *</span>}
       </label>
       
-      <div style={{ position: 'relative' }}>
-        <input
-          id={id}
-          name={name}
-          type={tipo}
-          value={estado.valor}
-          onChange={(e) => onChange(e.target.value)}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          className={obterClasseCampo()}
-          disabled={disabled || estado.carregando}
-          required={obrigatorio}
-        />
-        {obterIconeStatus()}
-      </div>
-      
-      {obterMensagem()}
+      <input
+        id={id}
+        name={name}
+        type={tipo}
+        value={valor}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        className={classeCompleta}
+        disabled={disabled}
+        required={obrigatorio}
+      />
     </li>
   );
 }
@@ -112,12 +71,12 @@ interface PropriedadesCampoSelect {
   opcoes: { valor: string; texto: string }[];
   valor: string;
   onChange: (valor: string) => void;
-  className?: string;
+  classeCssOriginal?: string;
   disabled?: boolean;
 }
 
 /**
- * Componente de campo select
+ * Componente de campo select simples
  */
 export function CampoSelect({
   id,
@@ -127,15 +86,12 @@ export function CampoSelect({
   opcoes,
   valor,
   onChange,
-  className = '',
+  classeCssOriginal = '',
   disabled = false
 }: PropriedadesCampoSelect) {
   return (
     <li>
-      <label 
-        htmlFor={id} 
-        className={obrigatorio ? 'label-obrigatorio' : ''}
-      >
+      <label htmlFor={id}>
         {label}
         {obrigatorio && <span className="Asterisco"> *</span>}
       </label>
@@ -145,7 +101,7 @@ export function CampoSelect({
         name={name}
         value={valor}
         onChange={(e) => onChange(e.target.value)}
-        className={className}
+        className={classeCssOriginal}
         disabled={disabled}
         required={obrigatorio}
       >

@@ -3,7 +3,7 @@ import { ResultadoValidacaoMatematica } from '../tipos/tiposValidacao';
 /**
  * Valida matematicamente um CNPJ
  * @param cnpj - CNPJ a ser validado (com ou sem formatação)
- * @returns Resultado da validação matemática
+ * @returns Resultado da validação matemática (apenas boolean)
  */
 export function validarCnpjMatematico(cnpj: string): ResultadoValidacaoMatematica {
   // Remove formatação
@@ -11,18 +11,12 @@ export function validarCnpjMatematico(cnpj: string): ResultadoValidacaoMatematic
 
   // Verifica se tem 14 dígitos
   if (cnpjLimpo.length !== 14) {
-    return {
-      valido: false,
-      erro: 'CNPJ deve conter 14 dígitos'
-    };
+    return { valido: false };
   }
 
   // Verifica se todos os dígitos são iguais
   if (/^(\d)\1{13}$/.test(cnpjLimpo)) {
-    return {
-      valido: false,
-      erro: 'CNPJ não pode ter todos os dígitos iguais'
-    };
+    return { valido: false };
   }
 
   // Validação do primeiro dígito verificador
@@ -38,10 +32,7 @@ export function validarCnpjMatematico(cnpj: string): ResultadoValidacaoMatematic
   const primeiroDigito = resto < 2 ? 0 : 11 - resto;
 
   if (parseInt(cnpjLimpo[12]) !== primeiroDigito) {
-    return {
-      valido: false,
-      erro: 'CNPJ inválido - primeiro dígito verificador incorreto'
-    };
+    return { valido: false };
   }
 
   // Validação do segundo dígito verificador
@@ -57,15 +48,10 @@ export function validarCnpjMatematico(cnpj: string): ResultadoValidacaoMatematic
   const segundoDigito = resto < 2 ? 0 : 11 - resto;
 
   if (parseInt(cnpjLimpo[13]) !== segundoDigito) {
-    return {
-      valido: false,
-      erro: 'CNPJ inválido - segundo dígito verificador incorreto'
-    };
+    return { valido: false };
   }
 
-  return {
-    valido: true
-  };
+  return { valido: true };
 }
 
 /**

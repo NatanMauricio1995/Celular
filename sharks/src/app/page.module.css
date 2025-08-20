@@ -1,12 +1,32 @@
-.iPhone16ProMaxDourado 
-{
-  width: 300px;
-  max-width: 600px;
-  height: auto;
-  margin: 20px auto;
+.iPhone16ProMaxDourado {
+  width: 100%;            /* ocupa toda a largura disponível */
+  max-width: 600px;       /* mas nunca maior que 600px */
+  height: auto;           /* mantém proporção */
+  margin: 20px auto;      /* centraliza horizontalmente */
+  display: block;         /* garante comportamento de bloco */
 }
 
-.TextoContainer
-{
-  max-width: 600px;
+.TextoContainer {
+  width: 90%;             /* usa 90% da largura da tela */
+  max-width: 600px;       /* mas nunca maior que 600px */
+  margin: 0 auto;         /* centraliza */
+  font-size: 1rem;        /* tamanho base do texto */
+  line-height: 1.5;       /* melhora legibilidade */
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 480px) {
+  .TextoContainer {
+    font-size: 0.9rem;    /* reduz fonte em telas menores */
+  }
+  .iPhone16ProMaxDourado {
+    max-width: 90%;       /* ocupa mais espaço no mobile */
+  }
+}
+
+/* Ajustes para telas grandes */
+@media (min-width: 1200px) {
+  .TextoContainer {
+    font-size: 1.1rem;    /* aumenta um pouco em telas grandes */
+  }
 }

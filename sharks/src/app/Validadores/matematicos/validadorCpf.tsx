@@ -3,7 +3,7 @@ import { ResultadoValidacaoMatematica } from '../tipos/tiposValidacao';
 /**
  * Valida matematicamente um CPF
  * @param cpf - CPF a ser validado (com ou sem formatação)
- * @returns Resultado da validação matemática
+ * @returns Resultado da validação matemática (apenas boolean)
  */
 export function validarCpfMatematico(cpf: string): ResultadoValidacaoMatematica {
   // Remove formatação
@@ -11,18 +11,12 @@ export function validarCpfMatematico(cpf: string): ResultadoValidacaoMatematica 
 
   // Verifica se tem 11 dígitos
   if (cpfLimpo.length !== 11) {
-    return {
-      valido: false,
-      erro: 'CPF deve conter 11 dígitos'
-    };
+    return { valido: false };
   }
 
   // Verifica se todos os dígitos são iguais
   if (/^(\d)\1{10}$/.test(cpfLimpo)) {
-    return {
-      valido: false,
-      erro: 'CPF não pode ter todos os dígitos iguais'
-    };
+    return { valido: false };
   }
 
   // Validação do primeiro dígito verificador
@@ -35,10 +29,7 @@ export function validarCpfMatematico(cpf: string): ResultadoValidacaoMatematica 
   const primeiroDigito = resto < 2 ? 0 : 11 - resto;
 
   if (parseInt(cpfLimpo[9]) !== primeiroDigito) {
-    return {
-      valido: false,
-      erro: 'CPF inválido - primeiro dígito verificador incorreto'
-    };
+    return { valido: false };
   }
 
   // Validação do segundo dígito verificador
@@ -51,15 +42,10 @@ export function validarCpfMatematico(cpf: string): ResultadoValidacaoMatematica 
   const segundoDigito = resto < 2 ? 0 : 11 - resto;
 
   if (parseInt(cpfLimpo[10]) !== segundoDigito) {
-    return {
-      valido: false,
-      erro: 'CPF inválido - segundo dígito verificador incorreto'
-    };
+    return { valido: false };
   }
 
-  return {
-    valido: true
-  };
+  return { valido: true };
 }
 
 /**
