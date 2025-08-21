@@ -606,6 +606,7 @@ export default function Cadastro() {
           </Box>
           
           <Botao_Form_Grande
+            className="Salvar"
             color="#10b981"
             type="submit"
             disabled={!termosAceitos}

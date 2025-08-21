@@ -10,6 +10,7 @@ import Tela_ADM from "../components/layout/Tela_ADM/Tela_ADM";
 import Box from "../components/layout/Box/Box";
 import ImagensCarrossel from "../components/layout/ImagensCarrossel/ImagensCarrossel";
 import GerarSKU from "../utils/GerarSKU";
+import Botao_Form_Grande from "../components/ui/Botao_Form_Grande/Botao_Form_Grande";
 
 
 // Importa Firebase do arquivo de configuração
@@ -221,8 +222,12 @@ export default function Cadastro_Produto() {
                         <h2>SKU</h2>
                         <GerarSKU  className="SKU_Bloco"/>
                     </Box>
-
-
+                    <Botao_Form_Grande 
+                        type = "submit"
+                        children = {"Salvar"}
+                        color = "#10b981"
+                        className = "Salvar"
+                    />
                 </form>
             </Tela_ADM>
         </div>
