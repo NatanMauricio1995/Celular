@@ -28,7 +28,7 @@ export default function Cadastro_Produto()
                     <Box>
                         <div>
                             <h2>Dados do celular</h2>
-                            <ul>
+                            <ul className="Lista_Cadastro">
                                 <li>
                                     <label htmlFor="MODELO" className="Titulo_Input">
                                         Modelo <span className='Asterisco'>*</span>
@@ -44,7 +44,7 @@ export default function Cadastro_Produto()
                                             required
                                     />
                                 </li>
-                                <li>
+                                <li> 
                                     <label htmlFor="NOTA" className="Titulo_Input">
                                         Nota do aparelho <span className='Asterisco'>*</span>
                                     </label>
@@ -59,7 +59,7 @@ export default function Cadastro_Produto()
 
                                 </li>
                                 <li>
-                                    <label className="Titulo_Input">Capacidade de memória<span className='Asterisco'>*</span></label>
+                                    <label className="Titulo_Input">Capacidade de memória <span className='Asterisco'>*</span></label>
                                     <div className="Arrumacao_Botao">
                                         <label className="Label_Botao" htmlFor="MEMORIA64">
                                             <input
@@ -107,6 +107,35 @@ export default function Cadastro_Produto()
                         </div>
                         <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
+                    <Box>
+                        <h2>Cor</h2>
+                    </Box>
+
+                    <Box>
+                        <h2>Quantidade</h2>
+                        <ul className="Lista_Cadastro">
+                            <li>
+                                <label className="Titulo_Input" htmlFor="QUANTIDADE">
+                                    Quantidade em estoque: <span className='Asterisco'>*</span>
+                                </label>
+                                <input
+                                    className="Campo_Numero"
+                                    type = "number"
+                                    id = "QUANTIDADE"
+                                    name = "QUANTIDADE"
+                                    maxLength={10}
+                                    required
+                                    min={0}
+                                    step={1}
+                                />
+                            </li>
+                        </ul>
+                         <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
+                    </Box>
+                    <Box>
+                        
+                    </Box>
+
                  </form>
             </Tela_ADM>
         </div>
