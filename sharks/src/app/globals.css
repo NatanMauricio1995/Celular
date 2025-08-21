@@ -116,10 +116,16 @@ select {
 }
 
 .Campo_TextArea {
-    width: 100%;   /* ocupa toda a largura do container */
-    max-width: 600px;
-    height: 100px;
-    resize: vertical; /* permite só aumentar verticalmente */
+    width: 100%;            
+    max-width: 94%;      
+    height: 100px;         
+    resize: none;         
+    overflow-y: auto;       
+    overflow-x: hidden;     
+    box-sizing: border-box; 
+    padding: auto;           
+    font-family: var(--Fonte_Texto);  
+    font-size: 14px;       
 }
 
 
@@ -190,4 +196,34 @@ select {
     font-family: var(--Fonte_Texto);
     font-size: .9em;
     font-weight: 100;
+}
+
+.Botao_Generico
+{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background-color: #1e40af;
+    color: #f8fafc;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+.Botao_Generico:hover
+{
+    background-color: #1e3a8a;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(30, 64, 175, 0.4);
+}
+
+.Botao_Generico:active {
+    transform: translateY(-1px);
 }

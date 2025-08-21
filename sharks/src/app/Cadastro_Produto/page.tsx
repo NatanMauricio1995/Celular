@@ -9,12 +9,14 @@ import "../styles/Cadastro_Produto.css";
 import Tela_ADM from "../components/layout/Tela_ADM/Tela_ADM";
 import Box from "../components/layout/Box/Box";
 import ImagensCarrossel from "../components/layout/ImagensCarrossel/ImagensCarrossel";
+import GerarSKU from "../utils/GerarSKU";
 
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
+
 
 export default function Cadastro_Produto() {
     const [precoCompra, setPrecoCompra] = useState<number>(0);
@@ -198,7 +200,27 @@ export default function Cadastro_Produto() {
                         <ImagensCarrossel />
                     </Box>
 
+                    <Box>
+                        <h2>Descrição do Produto</h2>
+                        <ul className="Lista_Cadastro">
+                            <li className="Conteudo">
+                                <textarea 
+                                    className="Campo_TextArea"
+                                    id ="DESCRICAO"
+                                    name = "DESCRICAO"
+                                    rows = {5}
+                                    cols= {50}
+                                    maxLength={1000}
+                                    wrap = "soft"
+                                /> 
+                            </li>
+                        </ul>
+                    </Box>
 
+                    <Box className="BOX_ADM">
+                        <h2>SKU</h2>
+                        <GerarSKU  className="SKU_Bloco"/>
+                    </Box>
 
 
                 </form>

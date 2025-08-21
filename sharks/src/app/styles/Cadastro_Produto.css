@@ -38,3 +38,39 @@ h2
     justify-content: space-between;
     width: 100%;
 }
+
+.Conteudo
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.Box
+{
+    display: flex;            
+    flex-direction: column; 
+}
+
+.SKU_Bloco 
+{
+    width: 50%;
+    min-height: 50px;        
+}
+
+.SKU_Bloco_Interno
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-self: center;
+
+}
+
+.SKU_Bloco_Interno button
+{
+    margin: 10px;
+}
