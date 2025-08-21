@@ -3,6 +3,9 @@
 .Corpo_ADM
 {
     padding-top: 30px;
-    padding-left: 40px;
+    padding-left: 120px;
     margin-left: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

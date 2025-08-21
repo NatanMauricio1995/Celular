@@ -1,4 +1,4 @@
-//sharks\src\app\Cadastro_Produto\page.tsx
+// sharks\src\app\Cadastro_Produto\page.tsx
 
 "use client";
 
@@ -14,18 +14,17 @@ import { auth, db } from '../utils/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 
+export default function Cadastro_Produto() {
+    const [precoCompra, setPrecoCompra] = useState<number>(0);
+    const [margemLucro, setMargemLucro] = useState<number>(0);
+    const precoVenda = precoCompra * (100 + margemLucro) / 100;
 
-//Programa Principal
-export default function Cadastro_Produto()
-{
-
-
-    return(
+    return (
         <div>
-            <Tela_ADM>
+            <Tela_ADM className = "Tela_Adm">
                 <h1>Cadastro de produto</h1>
                 <form>
-                    <Box>
+                    <Box className="BOX_ADM"> 
                         <div>
                             <h2>Dados do celular</h2>
                             <ul className="Lista_Cadastro">
@@ -34,71 +33,46 @@ export default function Cadastro_Produto()
                                         Modelo <span className='Asterisco'>*</span>
                                     </label>
                                     <input
-                                            className="Campo_Texto"
-                                            type = "text"
-                                            id = "MODELO"
-                                            name = "MODELO"
-                                            maxLength={100}
-                                            pattern="[A-Za-z]{3,}"
-                                            autoFocus
-                                            required
+                                        className="Campo_Texto"
+                                        type="text"
+                                        id="MODELO"
+                                        name="MODELO"
+                                        maxLength={100}
+                                        pattern="[A-Za-z]{3,}"
+                                        autoFocus
+                                        required
                                     />
                                 </li>
-                                <li> 
+                                <li>
                                     <label htmlFor="NOTA" className="Titulo_Input">
                                         Nota do aparelho <span className='Asterisco'>*</span>
                                     </label>
-                                    <select className="Campo_" id = "NOTA" name="NOTA" required>
-                                        <option value = "">Selecione uma nota</option>
-                                        <option value = "COMO_NOVO">Como novo</option>
-                                        <option value = "A+">A+</option>
-                                        <option value = "A-">Selecione uma nota</option>
-                                        <option value = "B+">Selecione uma nota</option>
-                                        <option value = "B-">Selecione uma nota</option>                                        
+                                    <select className="Campo_" id="NOTA" name="NOTA" required>
+                                        <option value="">Selecione uma nota</option>
+                                        <option value="COMO_NOVO">Como novo</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
                                     </select>
-
                                 </li>
                                 <li>
                                     <label className="Titulo_Input">Capacidade de memória <span className='Asterisco'>*</span></label>
                                     <div className="Arrumacao_Botao">
                                         <label className="Label_Botao" htmlFor="MEMORIA64">
-                                            <input
-                                                className='Botao_Radio'
-                                                type='radio'
-                                                id="MEMORIA64"
-                                                name='CAPACIDADE_MEMORIA'
-                                                value="64"                        
-                                            />
+                                            <input className='Botao_Radio' type='radio' id="MEMORIA64" name='CAPACIDADE_MEMORIA' value="64" />
                                             64 GB
                                         </label>
                                         <label className="Label_Botao" htmlFor="MEMORIA128">
-                                            <input
-                                                className='Botao_Radio'
-                                                type='radio'
-                                                id="MEMORIA128"
-                                                name='CAPACIDADE_MEMORIA'
-                                                value="128"                        
-                                            />
+                                            <input className='Botao_Radio' type='radio' id="MEMORIA128" name='CAPACIDADE_MEMORIA' value="128" />
                                             128 GB
                                         </label>
                                         <label className="Label_Botao" htmlFor="MEMORIA256">
-                                            <input
-                                                className='Botao_Radio'
-                                                type='radio'
-                                                id="MEMORIA256"
-                                                name='CAPACIDADE_MEMORIA'
-                                                value="256"                        
-                                            />
+                                            <input className='Botao_Radio' type='radio' id="MEMORIA256" name='CAPACIDADE_MEMORIA' value="256" />
                                             256 GB
                                         </label>
                                         <label className="Label_Botao" htmlFor="MEMORIA512">
-                                            <input
-                                                className='Botao_Radio'
-                                                type='radio'
-                                                id="MEMORIA512"
-                                                name='CAPACIDADE_MEMORIA'
-                                                value="512"                        
-                                            />
+                                            <input className='Botao_Radio' type='radio' id="MEMORIA512" name='CAPACIDADE_MEMORIA' value="512" />
                                             512 GB
                                         </label>
                                     </div>
@@ -107,11 +81,12 @@ export default function Cadastro_Produto()
                         </div>
                         <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
-                    <Box>
+
+                    <Box className="BOX_ADM">
                         <h2>Cor</h2>
                     </Box>
 
-                    <Box>
+                    <Box className="BOX_ADM">
                         <h2>Quantidade</h2>
                         <ul className="Lista_Cadastro">
                             <li>
@@ -120,9 +95,9 @@ export default function Cadastro_Produto()
                                 </label>
                                 <input
                                     className="Campo_Numero"
-                                    type = "number"
-                                    id = "QUANTIDADE"
-                                    name = "QUANTIDADE"
+                                    type="number"
+                                    id="QUANTIDADE"
+                                    name="QUANTIDADE"
                                     maxLength={10}
                                     required
                                     min={0}
@@ -130,13 +105,56 @@ export default function Cadastro_Produto()
                                 />
                             </li>
                         </ul>
-                         <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
-                    </Box>
-                    <Box>
-                        
+                        <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
 
-                 </form>
+                    <Box className="BOX_ADM">
+                        <h2>Preço</h2>
+                        <ul className="Lista_Cadastro">
+                            <li>
+                                <label className="Titulo_Input" htmlFor="PRECO_COMPRA">
+                                    Preço de compra (R$): <span className='Asterisco'>*</span>
+                                </label>
+                                <input
+                                    className="Campo_Numero"
+                                    type="number"
+                                    id="PRECO_COMPRA"
+                                    name="PRECO_COMPRA"
+                                    maxLength={10}
+                                    required
+                                    min={0}
+                                    step={0.01}
+                                    value={precoCompra}
+                                    onChange={(e) => setPrecoCompra(parseFloat(e.target.value))}
+                                />
+                            </li>
+                            <li>
+                                <label className="Titulo_Input" htmlFor="MARGEM_LUCRO">
+                                    Porcentual de lucro (%) <span className='Asterisco'>*</span>
+                                </label>
+                                <input
+                                    className="Campo_Numero"
+                                    type="number"
+                                    id="MARGEM_LUCRO"
+                                    name="MARGEM_LUCRO"
+                                    maxLength={3}
+                                    required
+                                    min={0}
+                                    max={100}
+                                    step={0.01}
+                                    value={margemLucro}
+                                    onChange={(e) => setMargemLucro(parseFloat(e.target.value))}
+                                />
+                            </li>
+                            <li className="Titulo_Input">
+                                <div className="Exibir_Valor_Venda">
+                                    <div>Preço de venda estimado:</div>
+                                    <div className="Valor_Venda">R$ {precoVenda.toFixed(2)}</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </Box>
+                </form>
             </Tela_ADM>
         </div>
     );
