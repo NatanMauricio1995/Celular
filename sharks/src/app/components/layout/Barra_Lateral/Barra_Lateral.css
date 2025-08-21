@@ -1,0 +1,82 @@
+/* sharks\src\app\components\layout\Barra_Lateral\Barra_Lateral.css */
+
+.Barra_Lateral {
+    background-color: var(--Cor_CinzaMedio);
+    width: 250px;
+    position: fixed;
+    height: 100vh;
+    margin-top: 30px;
+    z-index: 999;
+    color: var(--Cor_CinzaClaro);
+    font-size: 0.9em;
+    padding-top: 10px;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: all 0.3s ease-in-out;
+}
+
+.Barra_Lateral a {
+    text-decoration: none;
+    color: var(--Cor_CinzaClaro);
+    display: block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: 
+        text-decoration 0.4s ease-in-out,
+        color 0.3s ease-in-out,
+        background-color 0.3s ease-in-out,
+        transform 0.2s ease-in-out;
+}
+
+.Barra_Lateral a:hover {
+    text-decoration: underline;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--Cor_Branco);
+    transform: translateX(4px); /* leve deslize para a direita */
+}
+
+.Barra_Lateral a.active-link {
+    font-weight: bold;
+    color: var(--Cor_AzulEscuro);
+    background-color: rgba(255, 255, 255, 0.15);
+    text-decoration: none;
+    transform: translateX(6px); /* destaque maior no ativo */
+}
+
+.Barra_Lateral ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.Barra_Lateral li {
+    margin: 0;
+    padding: 4px 0;
+}
+
+/* remove o recuo do submenu */
+.Barra_Lateral li ul {
+    margin: 0;
+    padding-left: 0;
+}
+
+.Barra_Lateral li ul li {
+    padding-left: 0; /* alinhado igual ao principal */
+}
+
+/* tópicos principais */
+.Topico {
+    font-weight: 500;
+    font-family: var(--Fonte_Titulos);
+    margin-top: 10px;
+    padding: 6px 12px;
+}
+
+/* links de subtópicos */
+.Topico_Link {
+    font-weight: 300;
+    font-family: var(--Fonte_Texto);
+    padding-left: 0;
+}
