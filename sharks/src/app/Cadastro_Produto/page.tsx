@@ -8,6 +8,7 @@ import Link from "next/link";
 import "../styles/Cadastro_Produto.css";
 import Tela_ADM from "../components/layout/Tela_ADM/Tela_ADM";
 import Box from "../components/layout/Box/Box";
+import CorPreview from "../components/ui/CorPreview/CorPreview";
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
@@ -18,6 +19,8 @@ export default function Cadastro_Produto() {
     const [precoCompra, setPrecoCompra] = useState<number>(0);
     const [margemLucro, setMargemLucro] = useState<number>(0);
     const precoVenda = precoCompra * (100 + margemLucro) / 100;
+    const [codigoCor, setCodigoCor] = useState<string>("#FFFFFF");
+
 
     return (
         <div>
@@ -84,6 +87,42 @@ export default function Cadastro_Produto() {
 
                     <Box className="BOX_ADM">
                         <h2>Cor</h2>
+                         <ul className="Lista_Cadastro">
+                            <li>
+                                <label className="Titulo_Input" htmlFor="NOME_COR">
+                                    Nome da cor: <span className='Asterisco'>*</span>
+                                </label>
+                                <input
+                                    className="Campo_Texto"
+                                    type="text"
+                                    id="NOME_COR"
+                                    name="NOME_COR"
+                                    maxLength={100}
+                                    required
+                                    minLength={1}
+                                />
+                            </li>
+                            <li>
+                                <label className="Titulo_Input" htmlFor="CODIGO_COR">
+                                    Código Hexadecimal da Cor: <span className='Asterisco'>*</span>
+                                </label>
+                                <CorPreview codigoCor={codigoCor} />
+                                <input
+                                    className="Campo_Texto"
+                                    type="text"
+                                    id="CODIGO_COR"
+                                    name="CODIGO_COR"
+                                    maxLength={7}
+                                    required
+                                    minLength={7}
+                                    value={codigoCor}
+                                    onChange={(e) => setCodigoCor(e.target.value)}
+                                />
+                                
+                            </li>
+                            
+                        </ul>
+
                     </Box>
 
                     <Box className="BOX_ADM">
@@ -153,6 +192,7 @@ export default function Cadastro_Produto() {
                                 </div>
                             </li>
                         </ul>
+                        <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
                 </form>
             </Tela_ADM>
