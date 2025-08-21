@@ -6,6 +6,7 @@
     position: fixed;
     height: 100vh;
     margin-top: 30px;
+    padding: 10px;
     z-index: 999;
     color: var(--Cor_CinzaClaro);
     font-size: 0.9em;

@@ -45,3 +45,21 @@ Receber ofertas por e-mail
 
 
 Total: 22 campos (13 obrigatórios marcados com *)
+
+Dados Celular
+MODELO
+NOTA
+	COMO_NOVO
+	A+
+	A-
+	B+
+	B-
+CAPACIDADE_MEMORIA
+	64
+	128
+	256
+	512
+COR
+QUANTIDADE_ESTOQUE
+PRECO_COMPRA
+MARGEM_LUCRO

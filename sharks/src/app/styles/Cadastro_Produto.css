@@ -1,2 +1,27 @@
 /* sharks\src\app\styles\Cadastro_Produto.css */
 
+h2
+{
+    font-size: 1.2em;
+}
+
+li
+{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.Botao_Radio
+{
+    display: inline;
+    align-self: center;
+
+}
+
+.Arrumacao_Botao
+{
+    display: flex;
+    gap:10px;
+    padding-right: 42px;
+}
