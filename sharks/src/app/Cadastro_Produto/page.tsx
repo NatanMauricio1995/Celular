@@ -8,7 +8,8 @@ import Link from "next/link";
 import "../styles/Cadastro_Produto.css";
 import Tela_ADM from "../components/layout/Tela_ADM/Tela_ADM";
 import Box from "../components/layout/Box/Box";
-import CorPreview from "../components/ui/CorPreview/CorPreview";
+import ImagensCarrossel from "../components/layout/ImagensCarrossel/ImagensCarrossel";
+
 
 // Importa Firebase do arquivo de configuração
 import { auth, db } from '../utils/firebaseConfig';
@@ -106,10 +107,9 @@ export default function Cadastro_Produto() {
                                 <label className="Titulo_Input" htmlFor="CODIGO_COR">
                                     Código Hexadecimal da Cor: <span className='Asterisco'>*</span>
                                 </label>
-                                <CorPreview codigoCor={codigoCor} />
                                 <input
                                     className="Campo_Texto"
-                                    type="text"
+                                    type="color"
                                     id="CODIGO_COR"
                                     name="CODIGO_COR"
                                     maxLength={7}
@@ -118,11 +118,9 @@ export default function Cadastro_Produto() {
                                     value={codigoCor}
                                     onChange={(e) => setCodigoCor(e.target.value)}
                                 />
-                                
                             </li>
-                            
                         </ul>
-
+                        <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
 
                     <Box className="BOX_ADM">
@@ -194,6 +192,15 @@ export default function Cadastro_Produto() {
                         </ul>
                         <p className='Texto'><span className='Asterisco'>*</span> - Campo obrigatório</p>
                     </Box>
+
+                    <Box className="BOX_ADM">
+                        <h2>Fotos do produto</h2>
+                        <ImagensCarrossel />
+                    </Box>
+
+
+
+
                 </form>
             </Tela_ADM>
         </div>
