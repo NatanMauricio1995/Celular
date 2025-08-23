@@ -9,6 +9,7 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     font-weight: bold;
+    width: 30vh;
 }
 
 .Botao_Form_Grande:hover {

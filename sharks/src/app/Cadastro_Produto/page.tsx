@@ -41,6 +41,7 @@ export default function Cadastro_Produto() {
                 descricao: form.DESCRICAO.value,
                 sku: sku,
                 urlImagem: urlImagem,
+                status: "À venda",
                 criadoEm: new Date()
             };
 
@@ -107,6 +108,7 @@ export default function Cadastro_Produto() {
                                                 id={`MEMORIA${mem}`}
                                                 name="CAPACIDADE_MEMORIA"
                                                 value={mem}
+                                                required
                                             />
                                             {mem} GB
                                         </label>
@@ -233,6 +235,7 @@ export default function Cadastro_Produto() {
                             name="DESCRICAO"
                             rows={5}
                             maxLength={1000}
+                            required
                         />
                     </Box>
 
