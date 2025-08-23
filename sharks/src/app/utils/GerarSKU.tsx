@@ -1,18 +1,18 @@
-// sharks\src\app\utils\GerarSKU.tsx
 "use client";
 
-import { useState } from "react";
+interface GerarSKUProps {
+    sku: string;
+    setSku: (sku: string) => void;
+}
 
-export default function GerarSKU() {
-    const [sku, setSku] = useState<string>("");
-
-    // Função que gera 5 números aleatórios
+export default function GerarSKU({ sku, setSku }: GerarSKUProps) {
     const gerarNovoSKU = () => {
         let numeros = "";
         for (let i = 0; i < 5; i++) {
             numeros += Math.floor(Math.random() * 10).toString();
         }
-        setSku(`IPHONE-${numeros}`);
+        const novoSKU = `IPHONE-${numeros}`;
+        setSku(novoSKU);
     };
 
     return (
@@ -20,9 +20,8 @@ export default function GerarSKU() {
             <input
                 className="Campo_Texto"
                 type="text"
-                name="SKU"
-                value={sku}
                 readOnly
+                value={sku} // Mostra o SKU gerado
                 placeholder="Clique em gerar SKU"
             />
             <button
