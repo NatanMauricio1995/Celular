@@ -71,7 +71,7 @@ export default function Cadastro_Produto() {
                         <ul className="Lista_Cadastro">
                             <li>
                                 <label htmlFor="MODELO" className="Titulo_Input">
-                                    Modelo <span className="Asterisco">*</span>
+                                    Modelo: <span className="Asterisco">*</span>
                                 </label>
                                 <input
                                     className="Campo_Texto"
@@ -85,9 +85,9 @@ export default function Cadastro_Produto() {
                             </li>
                             <li>
                                 <label htmlFor="NOTA" className="Titulo_Input">
-                                    Nota do aparelho <span className="Asterisco">*</span>
+                                    Nota do aparelho: <span className="Asterisco">*</span>
                                 </label>
-                                <select className="Campo_" id="NOTA" name="NOTA" required>
+                                <select className="Campo_Select" id="NOTA" name="NOTA" required>
                                     <option value="">Selecione uma nota</option>
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
@@ -97,7 +97,7 @@ export default function Cadastro_Produto() {
                             </li>
                             <li>
                                 <label className="Titulo_Input">
-                                    Capacidade de memória <span className="Asterisco">*</span>
+                                    Capacidade de memória: <span className="Asterisco">*</span>
                                 </label>
                                 <div className="Arrumacao_Botao">
                                     {["64","128","256","512"].map(mem => (
@@ -196,7 +196,7 @@ export default function Cadastro_Produto() {
                             </li>
                             <li>
                                 <label className="Titulo_Input" htmlFor="MARGEM_LUCRO">
-                                    Porcentual de lucro (%) <span className="Asterisco">*</span>
+                                    Porcentual de lucro (%): <span className="Asterisco">*</span>
                                 </label>
                                 <input
                                     className="Campo_Numero"

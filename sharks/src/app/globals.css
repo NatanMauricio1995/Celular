@@ -94,7 +94,8 @@ input {
 
 .Campo_Texto,
 .Campo_Email,
-.Campo_Numero {
+.Campo_Numero,
+.Campo_Select {
     width: 45%;  /* ajustado para caber lado a lado */
     min-width: 200px; /* nunca menor que isso */
     margin-right: 5%;
@@ -228,4 +229,23 @@ select {
 
 .Botao_Generico:active {
     transform: translateY(-1px);
+}
+
+h2
+{
+    font-size: 1.2em;
+}
+
+.Lista_Cadastro li
+{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.Arrumacao_Botao
+{
+    display: flex;
+    gap:10px;
+    padding-right: 42px;
 }
