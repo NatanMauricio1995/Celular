@@ -202,7 +202,7 @@ export default function Barra_Pesquisa_Form({ onFiltrosChange }: BarraPesquisaFo
                         type="button"
                         onClick={limparFiltros}
                         color="#6c757d"
-                        style={{ marginRight: '10px' }}
+   
                     >
                         Limpar Filtros
                     </Botao_Form_Grande>

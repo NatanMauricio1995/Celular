@@ -137,7 +137,7 @@ export default function Editar_Produto() {
                             backgroundColor: '#f8f9fa',
                             borderRadius: '8px'
                         }}>
-                            <p>Selecione uma opção acima para visualizar os produtos.</p>
+                            <p className="Texto">Selecione uma opção acima para visualizar os produtos.</p>
                         </div>
                     </Box>
                 )}
